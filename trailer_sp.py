@@ -197,12 +197,26 @@ def battery(size_v):
     color(Black)(translate([w-0.75,l-0.75,h-1])(cylinder(r=0.5,h=1))),
   )
 
+def chair(size_v, leg_h=CHAIR_LEG_H, color=CHAIR_C):
+  (w,l,h) = size_v
+
+  seat = shelf([w,l,leg_h], num_shelfs=0)
+  cushion = translate([1,1,leg_h+1])(cube([w-2,l-2,2]))
+  back = up(leg_h)(cube([w,2,h-leg_h]))
+
+  return norm_color(color)(union()(seat, cushion, back))
 
 def fridge(size_v):
   return color(Cyan)(cube(size_v))
 
-def toilet():
-  pass
+def toilet(size_v, t=0):
+  (w,l,h) = size_v
+  r = w/2.0
+  offset = t * l
+  c = hull()(cylinder(r=r, h=h) + forward(l-r)(cylinder(r=r, h=h)))
+  c -= up(h)(sphere(r=r-2))
+  t = translate([r,r,0])(c)
+  return color(Cyan)(t)
 
 def victron():
   pass
@@ -210,19 +224,8 @@ def victron():
 def water():
   pass
 
-def chair(size_v, leg_h=CHAIR_LEG_H, color=CHAIR_C):
-  (w,l,h) = size_v
-
-  # legs = union()(
-  #   translate([2,2,0])(cylinder(r=2,h=leg_h)),
-  #   translate([w-2,2,0])(cylinder(r=2,h=leg_h)),
-  #   translate([2,l-2,0])(cylinder(r=2,h=leg_h)),
-  #   translate([w-2,l-2,0])(cylinder(r=2,h=leg_h)),
-  # )
-  seat = shelf([w,l,leg_h], num_shelfs=0)
-  back = up(leg_h)(cube([w,2,h-leg_h]))
-
-  return norm_color(color)(union()(seat, back))
+def table():
+  pass
 
 # ----- MAIN -------
 
@@ -233,7 +236,10 @@ k_h = VNOSE_HEIGHT
 bed_shelf_h = T_HEIGHT - BED_Z - BED_HEIGHT - 12 # allow for clearance above mattress
 long_shelf_l = T_LENGTH - GARAGE_L - CHAIR_W
 
-trailer = union()(
+def trailer(_time = 0.0):
+  toilet_offset = TOILET_L * _time
+
+  return union()(
   shell(),
   solar(),
 
@@ -263,8 +269,13 @@ trailer = union()(
   # fridge
   place('FL', fridge, (FRIDGE_W,FRIDGE_L,FRIDGE_H), 'R', [0,-1,1]),
 
+  # toilet
+  place('BR', toilet, (TOILET_W,TOILET_L,TOILET_H), 'L', [-toilet_offset,GARAGE_L,0], t=_time),
+
 )
 
-scad_render_to_file(trailer)
+# t = trailer(_time=0.9995)
+# scad_render_to_file(t)
+scad_render_animated_file(trailer)
     
 
