@@ -13,8 +13,6 @@ colors = [
     (144, 190, 109),
     (67, 170, 139),
     (87, 117, 144),   #6
-    # (103, 106, 96),  #7 : water jug (dark green)
-    (12, 148, 196),  #7 : water jug
 ]
 
 SHOW_ROOF = True
@@ -29,8 +27,6 @@ T_DOOR_OFF = 6
 VNOSE_HEIGHT = 42
 VNOSE_DEPTH = 2 * 12
 
-GARAGE_L = 36
-BED_SHELF_L = 28
 BED_WIDTH_S = 24
 BED_WIDTH_M = 30
 BED_WIDTH_L = 36
@@ -38,6 +34,18 @@ BED_LENGTH = 6 * 12
 BED_HEIGHT = 7 # 1 inch ply + 6" mattress
 BED_Z = T_HEIGHT - 38 - BED_HEIGHT # 38" sitting clearance max bed Z
 BED_COLOR = colors[5]
+
+BED_SHELF_L = 28 # depth of shelf above bed
+BED_SHELF_H = T_HEIGHT - BED_Z - BED_HEIGHT - 12 # allow for clearance above mattress
+
+SHELF_COLOR = colors[4]
+SHELF_COUNT = 3
+SHELF_L = 18 # standard shelf depth
+
+KITCHEN_H = VNOSE_HEIGHT
+KITCHEN_W = 2.5 * 12
+KITCHEN_L = SHELF_L
+KITCHEN_C = (216, 224, 187)
 
 # Renegy 300w
 # SOLAR_W = 40
@@ -87,15 +95,15 @@ WATER_H = 21
 # WATER_W = 13.75
 # WATER_L = 6.75
 # WATER_H = 18
+WATER_C = (12, 148, 196) # blue water jug
+# WATER_C = (103, 106, 96) # dark green
 
 TABLE_W = 12
 TABLE_L = 24
 TABLE_H = 33
 TABLE_C = colors[0]
 
-SHELF_COLOR = colors[4]
-SHELF_COUNT = 3
-
+GARAGE_L = 36 # standard garage length (depth)
 GARAGE_COLOR = colors[3]
 OPT_COLOR = colors[0]
 
@@ -246,7 +254,7 @@ def water(size_v):
     translate([-1,-1,(h-3)])(cube([5,l+2,5])) - \
     translate([5,-1,h-3-1])(cube([w-6,l+2,3]))
   h2o += translate([2,l/2.0,h-3])((cylinder(r=1.5, h=3, segments=10)))
-  return norm_color(colors[7])(h2o)
+  return norm_color(WATER_C)(h2o)
 
 def table(size_v):
   (w,l,h) = size_v
@@ -256,14 +264,12 @@ def table(size_v):
 
 # ----- MAIN -------
 
-bw = BED_WIDTH_M
-bl = BED_LENGTH
-k_len = T_LENGTH-bl-T_DOOR_W-T_DOOR_OFF
-k_h = VNOSE_HEIGHT
-bed_shelf_h = T_HEIGHT - BED_Z - BED_HEIGHT - 12 # allow for clearance above mattress
-long_shelf_l = T_LENGTH - GARAGE_L - CHAIR_W
-
-def trailer(_time = 0.0):
+# back length wise bed with lots of side shelf and chair
+def trailer0(_time = 0.0):
+  bw = BED_WIDTH_M
+  bl = BED_LENGTH
+  k_len = T_LENGTH-bl-T_DOOR_W-T_DOOR_OFF
+  long_shelf_w = T_LENGTH - GARAGE_L - CHAIR_W
   toilet_offset = TOILET_L * _time
 
   return union()(
@@ -282,13 +288,13 @@ def trailer(_time = 0.0):
   place('BL', shelf, (T_WIDTH-bw, GARAGE_L, BED_Z), None, [0,0,0], num_shelfs=2, with_back=True, color=GARAGE_COLOR),
 
   # kitchen/cooking area
-  place('BR', shelf, (k_len, bw, k_h), 'R', [0,bl,0], num_shelfs=1), # kitchen shelf
-  place('BR', shelf, (bw, 4, T_HEIGHT-k_h), 180, [0,bl,k_h], with_back=True, num_shelfs=3), # kitchen sep
+  place('BR', shelf, (k_len, bw, KITCHEN_H), 'R', [0,bl,0], num_shelfs=1), # kitchen shelf
+  place('BR', shelf, (bw, 4, T_HEIGHT-KITCHEN_H), 180, [0,bl,KITCHEN_H], with_back=True, num_shelfs=3), # kitchen sep
 
   place('BL', shelf, (T_WIDTH-bw-18, 18, T_HEIGHT-BED_Z), 180, [18,0,BED_Z], num_shelfs=2, color=OPT_COLOR), # tiny on back (opt)
   place('BL', shelf, (GARAGE_L, 18, T_HEIGHT-BED_Z), 'L', [0,0,BED_Z], num_shelfs=2), # short side shelf in back
-  place('BR', shelf, (bw, BED_SHELF_L, bed_shelf_h), 180, [0,0,T_HEIGHT-bed_shelf_h], num_shelfs=1), # above bed
-  place('BL', shelf, (long_shelf_l, 18, T_HEIGHT), 'L', [0,GARAGE_L,0], num_shelfs=5), # long side shelf
+  place('BR', shelf, (bw, BED_SHELF_L, BED_SHELF_H), 180, [0,0,T_HEIGHT-BED_SHELF_H], num_shelfs=1), # above bed
+  place('BL', shelf, (long_shelf_w, SHELF_L, T_HEIGHT), 'L', [0,GARAGE_L,0], num_shelfs=5), # long side shelf
 
   # chair
   place('FL', chair, (CHAIR_W, CHAIR_L, CHAIR_H), 'R', [0,0,0]),
@@ -307,8 +313,65 @@ def trailer(_time = 0.0):
   place('FL', table, (TABLE_W,TABLE_L,TABLE_H), 180, [CHAIR_L-TABLE_W+2,0,0]),
 )
 
-t0 = trailer(_time=0)
-scad_render_to_file(union()(t0))
-# scad_render_animated_file(trailer)
+def trailer1(_time = 0.0):
+  bw = BED_WIDTH_M
+  bl = BED_LENGTH
+  gl = bw # garage length (depth).  override to fit under bed
+
+  BED_SHELF_H = T_HEIGHT - BED_Z - BED_HEIGHT - 12 # allow for clearance above mattress
+  long_shelf_w = T_LENGTH - gl - CHAIR_W
+  elect_box_h = TOILET_H + 2
+  elect_box_w = T_LENGTH - T_DOOR_OFF - T_DOOR_W - KITCHEN_W - bw
+  # obs = over battery shelf
+  obs_w = elect_box_w
+  obs_z = elect_box_h
+  obs_h = T_HEIGHT - obs_z
+  k_off = bw + obs_w
+  toilet_offset = TOILET_L * _time
+
+  return union()(
+  shell(),
+  solar(),
+
+  # bed
+  place('BL', bed, (bw, bl, BED_HEIGHT), 'L', [0,0,BED_Z]),
+
+  # garage
+  place('BR', shelf, (bw, gl, BED_Z), None, [0,0,0], num_shelfs=0, with_back=True, color=GARAGE_COLOR), # under bed
+  place('BL', shelf, (T_WIDTH-bw, gl, BED_Z), None, [0,0,0], num_shelfs=2, with_back=True, color=GARAGE_COLOR),
+
+  # kitchen/cooking area
+  place('BR', shelf, (KITCHEN_W, KITCHEN_L, KITCHEN_H), 'R', [0,k_off,0], num_shelfs=1), # kitchen shelf
+  place('BR', shelf, (KITCHEN_L, 4, T_HEIGHT-KITCHEN_H), 180, [0,k_off,KITCHEN_H], with_back=True, num_shelfs=3), # kitchen sep
+
+  place('BR', shelf, (bw, SHELF_L, BED_SHELF_H), 'R', [0,0,T_HEIGHT-BED_SHELF_H], num_shelfs=1), # above bed
+  place('BR', shelf, (obs_w, SHELF_L, obs_h), 'R', [0,bw,obs_z], num_shelfs=4), # above battery/toilet
+  place('BL', shelf, (long_shelf_w, SHELF_L, T_HEIGHT), 'L', [0,gl,0], num_shelfs=5), # long side shelf
+
+  # chair
+  place('FL', chair, (CHAIR_W, CHAIR_L, CHAIR_H), 'R', [0,0,0]),
+
+  # fridge
+  place('FL', fridge, (FRIDGE_W,FRIDGE_L,FRIDGE_H), 'R', [0,-1,1]),
+
+  # toilet
+  place('BR', toilet, (TOILET_W,TOILET_L,TOILET_H), '', [-toilet_offset,gl,0], t=_time),
+
+  # # electronics (battery, solar charger, etc)
+  place('BR', battery, (BAT_W, BAT_L, BAT_H), '', [0,k_off-BAT_L,0]),
+  place('BR', battery, (BAT_W, BAT_L, BAT_H), '', [-1.1 * BAT_W,k_off-BAT_L,0]),
+
+  # water
+  place('FR', water, (WATER_W, WATER_L, WATER_H), '', [-T_WIDTH/4.0,VNOSE_DEPTH,0]),
+  place('FR', water, (WATER_W, WATER_L, WATER_H), '', [-T_WIDTH/4.0 - WATER_W - 2,VNOSE_DEPTH,0]),
+
+  # table
+  place('FL', table, (TABLE_W,TABLE_L,TABLE_H), 180, [CHAIR_L-TABLE_W+2,0,0]),
+)
+
+t0 = trailer0(_time=0)
+t1 = right(T_WIDTH * 2)(trailer1(_time=0))
+scad_render_to_file(union()(t0, t1))
+# scad_render_animated_file(trailer0)
     
 
