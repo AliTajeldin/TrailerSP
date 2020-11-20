@@ -13,6 +13,8 @@ colors = [
     (144, 190, 109),
     (67, 170, 139),
     (87, 117, 144),   #6
+    # (103, 106, 96),  #7 : water jug (dark green)
+    (12, 148, 196),  #7 : water jug
 ]
 
 SHOW_ROOF = True
@@ -77,6 +79,20 @@ FRIDGE_H = 15
 # FRIDGE_L = 14.2
 # FRIDGE_H = 21.6
 
+# 6 litter jug
+WATER_W = 14
+WATER_L = 8
+WATER_H = 21
+# 5 litter jug 6 3/4” x 13 3/4” and 18”
+# WATER_W = 13.75
+# WATER_L = 6.75
+# WATER_H = 18
+
+TABLE_W = 12
+TABLE_L = 24
+TABLE_H = 33
+TABLE_C = colors[0]
+
 SHELF_COLOR = colors[4]
 SHELF_COUNT = 3
 
@@ -115,7 +131,7 @@ def place(rel_to, obj_factory, size_v, rotation, offset, **kw):
     out = translate(offset)(out)
   return out
 
-def shell_frame(size_v):
+def frame_cutout(size_v):
   (w,h) = size_v
   ft = 0.1 # frame thickness
   fw = 2   # frame edge width
@@ -124,29 +140,32 @@ def shell_frame(size_v):
   return frame
 
 def shell():
+  # --- vnose shelf ---
   nose_d = VNOSE_DEPTH
   nose_s_w = T_WIDTH / 4.0 # width of angled segment 
   nose_s_l = M.sqrt(nose_d*nose_d + nose_s_w*nose_s_w) # length of nose angled segment
   nose_s_a = M.atan2(nose_d, nose_s_w) * 180 / M.pi
   nose_poly = polygon([(0,0), (nose_s_w,nose_d), (T_WIDTH-nose_s_w,nose_d), (T_WIDTH,0)])
+  sink_cutout = translate([T_WIDTH/2.0, nose_d/2.0, -1])(cylinder(r=6, h=3))
+  
+  nose_shelf = translate([0,T_LENGTH,VNOSE_HEIGHT])(linear_extrude(height=1)(nose_poly) - sink_cutout)
 
+  # --- floor ---
   pf = square([T_WIDTH,T_LENGTH]) + forward(T_LENGTH)(nose_poly)
   floor = linear_extrude(height=0.001)(pf)
-
-  nose_shelf = translate([0,T_LENGTH,VNOSE_HEIGHT])(linear_extrude(height=1)(nose_poly))
 
   # --- vnose windows ---
   vw_w = nose_s_l-2
   vw_h = T_HEIGHT-VNOSE_HEIGHT-3
-  vw1 = rotate(nose_s_a)(right(1)(shell_frame([vw_w,vw_h])))
+  vw1 = rotate(nose_s_a)(right(1)(frame_cutout([vw_w,vw_h])))
   vw1 = translate([0,T_LENGTH,VNOSE_HEIGHT+2])(vw1)
-  vw2 = rotate(180-nose_s_a)(right(1)(shell_frame([vw_w,vw_h])))
+  vw2 = rotate(180-nose_s_a)(right(1)(frame_cutout([vw_w,vw_h])))
   vw2 = translate([T_WIDTH,T_LENGTH,VNOSE_HEIGHT+2])(vw2)
-  vw3 = shell_frame([T_WIDTH-2*nose_s_w-2,vw_h])
+  vw3 = frame_cutout([T_WIDTH-2*nose_s_w-2,vw_h])
   vw3 = translate([nose_s_w+1,T_LENGTH+nose_d,VNOSE_HEIGHT+2])(vw3)
 
   # --- door ---
-  df = shell_frame([T_DOOR_W, T_HEIGHT])
+  df = frame_cutout([T_DOOR_W, T_HEIGHT])
   door = translate([T_WIDTH, T_LENGTH - T_DOOR_OFF - T_DOOR_W, 0])(rotate(90)(df))
 
   s = union()(nose_shelf, door, vw1, vw2, vw3)
@@ -221,11 +240,19 @@ def toilet(size_v, t=0):
 def victron():
   pass
 
-def water():
-  pass
+def water(size_v):
+  (w,l,h) = size_v
+  h2o = cube([w,l,h]) - \
+    translate([-1,-1,(h-3)])(cube([5,l+2,5])) - \
+    translate([5,-1,h-3-1])(cube([w-6,l+2,3]))
+  h2o += translate([2,l/2.0,h-3])((cylinder(r=1.5, h=3, segments=10)))
+  return norm_color(colors[7])(h2o)
 
-def table():
-  pass
+def table(size_v):
+  (w,l,h) = size_v
+  t = up(h-1)(cube([w,l,1])) + \
+    translate([1,1,0])(cylinder(r=1, h=h))
+  return norm_color(TABLE_C)(t)
 
 # ----- MAIN -------
 
@@ -272,10 +299,16 @@ def trailer(_time = 0.0):
   # toilet
   place('BR', toilet, (TOILET_W,TOILET_L,TOILET_H), 'L', [-toilet_offset,GARAGE_L,0], t=_time),
 
+  # water
+  place('FR', water, (WATER_W, WATER_L, WATER_H), '', [-T_WIDTH/4.0,VNOSE_DEPTH,0]),
+  place('FR', water, (WATER_W, WATER_L, WATER_H), '', [-T_WIDTH/4.0 - WATER_W - 2,VNOSE_DEPTH,0]),
+
+  # table
+  place('FL', table, (TABLE_W,TABLE_L,TABLE_H), 180, [CHAIR_L-TABLE_W+2,0,0]),
 )
 
-# t = trailer(_time=0.9995)
-# scad_render_to_file(t)
-scad_render_animated_file(trailer)
+t0 = trailer(_time=0)
+scad_render_to_file(union()(t0))
+# scad_render_animated_file(trailer)
     
 
