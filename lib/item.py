@@ -8,8 +8,17 @@ class Item(ABC):
     self.dim = dim
     self.children = []
 
-  def getDim(self):
-    return self.dim
+  def getDim(s):
+    return s.dim
+
+  def getW(s):
+    return s.dim[0]
+
+  def getL(s):
+    return s.dim[1]
+
+  def getH(s):
+    return s.dim[2]
 
   def c(s, cv, item):
     """apply color vector to given item and return the colored item"""
@@ -29,7 +38,8 @@ class Item(ABC):
 
   def render_all(s):
     """render this item plus render_all of it's children"""
-    return s.render() # TODO: add call to unionall with rendered children.
+    me_and_children = [s.render()] + s.children
+    return union()(me_and_children) 
 
   @staticmethod
   def swap(a,b):
@@ -66,6 +76,6 @@ class Item(ABC):
     if offset:
       out = translate(offset)(out)
 
-    self.children.append(out)
+    s.children.append(out)
 
     return out

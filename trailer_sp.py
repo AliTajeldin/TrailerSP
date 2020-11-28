@@ -4,7 +4,7 @@ from solid import *
 from solid.utils import *  # Not required, but the utils module is useful
 import math as M
 
-from lib.bed import bed, BedL, BedM, BedS
+from lib.bed import BedL, BedM, BedS
 from lib.shell import SilverEagle, SilverStar
 
 colors = [
@@ -369,13 +369,81 @@ def trailer1(_time = 0.0):
 
   # table
   place('FL', table, (TABLE_W,TABLE_L,TABLE_H), 180, [CHAIR_L-TABLE_W+2,0,0]),
-)
+  )
+
+def layout1():
+  # --- Config ---
+  s = SilverEagle()
+  bed = BedL(s.getW())
+
+  # --- Aliases ---
+  (sw,sl,sh) = s.getDim()
+  (bw,bl,bh) = bed.getDim()
+
+  # --- bed ---
+  bed_z = sh - 38 - bh # 38" sitting clearance max bed Z
+  s.place(bed, rotation='L', offset=[0,0,bed_z])
+
+  return s.render_all()
+
+  # gl = bw # garage length (depth).  override to fit under bed
+
+  # BED_SHELF_H = T_HEIGHT - BED_Z - BED_HEIGHT - 12 # allow for clearance above mattress
+  # long_shelf_w = T_LENGTH - gl - CHAIR_W
+  # elect_box_h = TOILET_H + 2
+  # elect_box_w = T_LENGTH - T_DOOR_OFF - T_DOOR_W - KITCHEN_W - bw
+  # # obs = over battery shelf
+  # obs_w = elect_box_w
+  # obs_z = elect_box_h
+  # obs_h = T_HEIGHT - obs_z
+  # k_off = bw + obs_w
+  # toilet_offset = TOILET_L * _time
+
+  # return union()(
+  # shell(),
+  # solar(),
+
+  # # bed
+  # place('BL', bed, (bw, bl, BED_HEIGHT), 'L', [0,0,BED_Z]),
+
+  # # garage
+  # place('BR', shelf, (bw, gl, BED_Z), None, [0,0,0], num_shelfs=0, with_back=True, color=GARAGE_COLOR), # under bed
+  # place('BL', shelf, (T_WIDTH-bw, gl, BED_Z), None, [0,0,0], num_shelfs=2, with_back=True, color=GARAGE_COLOR),
+
+  # # kitchen/cooking area
+  # place('BR', shelf, (KITCHEN_W, KITCHEN_L, KITCHEN_H), 'R', [0,k_off,0], num_shelfs=1), # kitchen shelf
+  # place('BR', shelf, (KITCHEN_L, 4, T_HEIGHT-KITCHEN_H), 180, [0,k_off,KITCHEN_H], with_back=True, num_shelfs=3), # kitchen sep
+
+  # place('BR', shelf, (bw, SHELF_L, BED_SHELF_H), 'R', [0,0,T_HEIGHT-BED_SHELF_H], num_shelfs=1), # above bed
+  # place('BR', shelf, (obs_w, SHELF_L, obs_h), 'R', [0,bw,obs_z], num_shelfs=4), # above battery/toilet
+  # place('BL', shelf, (long_shelf_w, SHELF_L, T_HEIGHT), 'L', [0,gl,0], num_shelfs=5), # long side shelf
+
+  # # chair
+  # place('FL', chair, (CHAIR_W, CHAIR_L, CHAIR_H), 'R', [0,0,0]),
+
+  # # fridge
+  # place('FL', fridge, (FRIDGE_W,FRIDGE_L,FRIDGE_H), 'R', [0,-1,1]),
+
+  # # toilet
+  # place('BR', toilet, (TOILET_W,TOILET_L,TOILET_H), '', [-toilet_offset,gl,0], t=_time),
+
+  # # # electronics (battery, solar charger, etc)
+  # place('BR', battery, (BAT_W, BAT_L, BAT_H), '', [0,k_off-BAT_L,0]),
+  # place('BR', battery, (BAT_W, BAT_L, BAT_H), '', [-1.1 * BAT_W,k_off-BAT_L,0]),
+
+  # # water
+  # place('FR', water, (WATER_W, WATER_L, WATER_H), '', [-T_WIDTH/4.0,VNOSE_DEPTH,0]),
+  # place('FR', water, (WATER_W, WATER_L, WATER_H), '', [-T_WIDTH/4.0 - WATER_W - 2,VNOSE_DEPTH,0]),
+
+  # # table
+  # place('FL', table, (TABLE_W,TABLE_L,TABLE_H), 180, [CHAIR_L-TABLE_W+2,0,0]),
 
 # t0 = trailer0(_time=0)
 # t1 = right(T_WIDTH * 2)(trailer1(_time=0))
 # scad_render_to_file(union()(t0, t1))
 # t = BedL().render()
-t = SilverStar().render_all()
+# t = SilverStar().render_all()
+t = layout1()
 scad_render_to_file(union()(t))
 
 # scad_render_animated_file(trailer0)
