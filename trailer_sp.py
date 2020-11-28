@@ -7,6 +7,7 @@ import math as M
 from lib.bed import BedL, BedM, BedS
 from lib.shell import SilverEagle, SilverStar
 from lib.solar import SolarRenegy200w, SolarRenegy300w
+from lib.shelf import Shelf
 
 colors = [
     # (249, 65, 68),    #0
@@ -377,6 +378,8 @@ def layout1():
   s = SilverEagle()
   bed = BedL(s.getW())
   solar = SolarRenegy200w()
+  kitchen_w = 2.5 * 12
+  shelf_depth = 18 # depth of side shelfs
 
   # --- Aliases ---
   (sw,sl,sh) = s.getDim()
@@ -390,10 +393,24 @@ def layout1():
   solar_x_off = (sw - s.getW()) / 2.0
   s.place(solar, offset=[solar_x_off,0,sh])
 
+  # --- garage ---
+  gl = bw # set garage depth same as bed
+  gc = (249, 199, 79) # garage color
+  s.place( Shelf((bw, gl, bed_z), count=0, with_back=True, color=gc), rel_to='BR')
+  s.place( Shelf((sw-bw, gl, bed_z), count=2, with_back=True, color=gc), rel_to='BL')
+
+  # --- kitchen/cooking area ---
+  kh = s.vnose_h
+  kc = (216, 224, 187)
+#   s.place( Shelf((kitchen_w, shelf_depth, kh), count=1, color=kc), rel_to='BR')
+# KITCHEN_C = 
+
+  # place('BR', shelf, (KITCHEN_W, KITCHEN_L, KITCHEN_H), 'R', [0,k_off,0], num_shelfs=1), # kitchen shelf
+  # place('BR', shelf, (KITCHEN_L, 4, T_HEIGHT-KITCHEN_H), 180, [0,k_off,KITCHEN_H], with_back=True, num_shelfs=3), # kitchen sep
+
+
   # --- render entire trailer ---
   return s.render_all()
-
-  # gl = bw # garage length (depth).  override to fit under bed
 
   # BED_SHELF_H = T_HEIGHT - BED_Z - BED_HEIGHT - 12 # allow for clearance above mattress
   # long_shelf_w = T_LENGTH - gl - CHAIR_W
@@ -406,20 +423,6 @@ def layout1():
   # k_off = bw + obs_w
   # toilet_offset = TOILET_L * _time
 
-  # return union()(
-  # shell(),
-  # solar(),
-
-  # # bed
-  # place('BL', bed, (bw, bl, BED_HEIGHT), 'L', [0,0,BED_Z]),
-
-  # # garage
-  # place('BR', shelf, (bw, gl, BED_Z), None, [0,0,0], num_shelfs=0, with_back=True, color=GARAGE_COLOR), # under bed
-  # place('BL', shelf, (T_WIDTH-bw, gl, BED_Z), None, [0,0,0], num_shelfs=2, with_back=True, color=GARAGE_COLOR),
-
-  # # kitchen/cooking area
-  # place('BR', shelf, (KITCHEN_W, KITCHEN_L, KITCHEN_H), 'R', [0,k_off,0], num_shelfs=1), # kitchen shelf
-  # place('BR', shelf, (KITCHEN_L, 4, T_HEIGHT-KITCHEN_H), 180, [0,k_off,KITCHEN_H], with_back=True, num_shelfs=3), # kitchen sep
 
   # place('BR', shelf, (bw, SHELF_L, BED_SHELF_H), 'R', [0,0,T_HEIGHT-BED_SHELF_H], num_shelfs=1), # above bed
   # place('BR', shelf, (obs_w, SHELF_L, obs_h), 'R', [0,bw,obs_z], num_shelfs=4), # above battery/toilet
