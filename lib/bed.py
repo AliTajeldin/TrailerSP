@@ -1,6 +1,6 @@
 from solid import *
 from solid.utils import *  # Not required, but the utils module is useful
-
+from lib.item import Item
 
 BED_WIDTH_S = 24
 BED_WIDTH_M = 30
@@ -19,17 +19,6 @@ def bed(size_v):
   # return norm_color(BED_COLOR)(b)
   return (b)
 
-class Item(object):
-  def __init__(self, dim):
-    self.dim = dim
-  
-  def c(self, cv, item):
-    """apply color vector to given item and return the colored item"""
-    return color([c/255.0 for c in cv])(item)
-
-  def t(self, tv, item):
-    """apply translation vector to given item"""
-    return translate(tv)(item)
 
 class BedBase(Item):
   def __init__(self, dim):
@@ -41,8 +30,15 @@ class BedBase(Item):
       cube([w,l,1]),
       translate([1,1,1])(cube([w-2,l-2,h-1]))
     )
-    # return norm_color(BED_COLOR)(b)
     return self.c(BED_COLOR, b)
+
+class BedS(BedBase):
+  def __init__(self):
+    super().__init__([BED_WIDTH_S, BED_LENGTH, BED_HEIGHT])
+
+class BedM(BedBase):
+  def __init__(self):
+    super().__init__([BED_WIDTH_M, BED_LENGTH, BED_HEIGHT])
 
 class BedL(BedBase):
   def __init__(self):

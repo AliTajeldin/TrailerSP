@@ -4,7 +4,8 @@ from solid import *
 from solid.utils import *  # Not required, but the utils module is useful
 import math as M
 
-from lib.bed import bed, BedL
+from lib.bed import bed, BedL, BedM, BedS
+from lib.shell import SilverEagle, SilverStar
 
 colors = [
     # (249, 65, 68),    #0
@@ -27,7 +28,7 @@ T_LENGTH = 12 * 12
 # T_WIDTH = 79
 # T_LENGTH = 14 * 12
 T_HEIGHT = 6.25 * 12
-T_COLOR = colors[6]
+T_COLOR = (87, 117, 144)
 T_DOOR_W = 30
 T_DOOR_OFF = 6
 VNOSE_HEIGHT = 42
@@ -145,6 +146,7 @@ def place(rel_to, obj_factory, size_v, rotation, offset, **kw):
     out = translate(offset)(out)
   return out
 
+
 def frame_cutout(size_v):
   (w,h) = size_v
   ft = 0.1 # frame thickness
@@ -152,6 +154,7 @@ def frame_cutout(size_v):
   frame = cube([w, ft, h]) - \
     translate([fw,-ft,fw])(cube([w-2*fw, 3*ft, h-2*fw]))
   return frame
+
 
 def shell():
   # --- vnose shelf ---
@@ -371,7 +374,8 @@ def trailer1(_time = 0.0):
 # t0 = trailer0(_time=0)
 # t1 = right(T_WIDTH * 2)(trailer1(_time=0))
 # scad_render_to_file(union()(t0, t1))
-t = BedL().render()
+# t = BedL().render()
+t = SilverStar().render_all()
 scad_render_to_file(union()(t))
 
 # scad_render_animated_file(trailer0)
