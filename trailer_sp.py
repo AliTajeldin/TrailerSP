@@ -6,6 +6,7 @@ import math as M
 
 from lib.bed import BedL, BedM, BedS
 from lib.shell import SilverEagle, SilverStar
+from lib.solar import SolarRenegy200w, SolarRenegy300w
 
 colors = [
     # (249, 65, 68),    #0
@@ -375,6 +376,7 @@ def layout1():
   # --- Config ---
   s = SilverEagle()
   bed = BedL(s.getW())
+  solar = SolarRenegy200w()
 
   # --- Aliases ---
   (sw,sl,sh) = s.getDim()
@@ -384,6 +386,11 @@ def layout1():
   bed_z = sh - 38 - bh # 38" sitting clearance max bed Z
   s.place(bed, rotation='L', offset=[0,0,bed_z])
 
+  # --- solar ---
+  solar_x_off = (sw - s.getW()) / 2.0
+  s.place(solar, offset=[solar_x_off,0,sh])
+
+  # --- render entire trailer ---
   return s.render_all()
 
   # gl = bw # garage length (depth).  override to fit under bed
