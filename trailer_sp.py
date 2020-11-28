@@ -8,6 +8,7 @@ from lib.bed import BedL, BedM, BedS
 from lib.shell import SilverEagle, SilverStar
 from lib.solar import SolarRenegy200w, SolarRenegy300w
 from lib.shelf import Shelf
+from lib.toilet import DryFlushToilet
 
 colors = [
     # (249, 65, 68),    #0
@@ -376,14 +377,18 @@ def trailer1(_time = 0.0):
 def layout1():
   # --- Config ---
   s = SilverEagle()
+  # s = SilverStar()
   bed = BedL(s.getW())
   solar = SolarRenegy200w()
+  toilet = DryFlushToilet()
   kitchen_w = 2.5 * 12
   shelf_depth = 18 # depth of side shelfs
 
   # --- Aliases ---
   (sw,sl,sh) = s.getDim()
   (bw,bl,bh) = bed.getDim()
+  elect_box_h = toilet.getH() + 2
+  elect_box_w = sl - s.door_off - s.door_w - kitchen_w - bw
 
   # --- bed ---
   bed_z = sh - 38 - bh # 38" sitting clearance max bed Z
@@ -399,33 +404,33 @@ def layout1():
   s.place( Shelf((bw, gl, bed_z), count=0, with_back=True, color=gc), rel_to='BR')
   s.place( Shelf((sw-bw, gl, bed_z), count=2, with_back=True, color=gc), rel_to='BL')
 
+  # --- toilet ---
+  s.place(toilet, rel_to='BR', offset=[0,gl,0])
+
+  # --- elect here (battery + chargers)
+  # place('BR', battery, (BAT_W, BAT_L, BAT_H), '', [0,k_off-BAT_L,0]),
+  # place('BR', battery, (BAT_W, BAT_L, BAT_H), '', [-1.1 * BAT_W,k_off-BAT_L,0]),
+
+  # --- obs: over battery shelf ---
+  obs_w = elect_box_w
+  obs_z = elect_box_h
+  obs_h = sh - obs_z
+  s.place( Shelf((obs_w,shelf_depth,obs_h), count=4), rel_to='BR', rotation='R', offset=[0,bw,obs_z])
+
   # --- kitchen/cooking area ---
   kh = s.vnose_h
-  kc = (216, 224, 187)
-#   s.place( Shelf((kitchen_w, shelf_depth, kh), count=1, color=kc), rel_to='BR')
-# KITCHEN_C = 
-
-  # place('BR', shelf, (KITCHEN_W, KITCHEN_L, KITCHEN_H), 'R', [0,k_off,0], num_shelfs=1), # kitchen shelf
-  # place('BR', shelf, (KITCHEN_L, 4, T_HEIGHT-KITCHEN_H), 180, [0,k_off,KITCHEN_H], with_back=True, num_shelfs=3), # kitchen sep
-
+  kc = (216, 230, 92)
+  k_off = bw + obs_w
+  s.place( Shelf((kitchen_w, shelf_depth, kh), count=1, color=kc), rel_to='BR', rotation='R', offset=[0,k_off,0])
+  s.place( Shelf((shelf_depth, 4, sh-kh), count=3, color=kc, with_back=True), rel_to='BR', rotation=180, offset=[0,k_off,kh])
 
   # --- render entire trailer ---
   return s.render_all()
 
   # BED_SHELF_H = T_HEIGHT - BED_Z - BED_HEIGHT - 12 # allow for clearance above mattress
   # long_shelf_w = T_LENGTH - gl - CHAIR_W
-  # elect_box_h = TOILET_H + 2
-  # elect_box_w = T_LENGTH - T_DOOR_OFF - T_DOOR_W - KITCHEN_W - bw
-  # # obs = over battery shelf
-  # obs_w = elect_box_w
-  # obs_z = elect_box_h
-  # obs_h = T_HEIGHT - obs_z
-  # k_off = bw + obs_w
-  # toilet_offset = TOILET_L * _time
-
 
   # place('BR', shelf, (bw, SHELF_L, BED_SHELF_H), 'R', [0,0,T_HEIGHT-BED_SHELF_H], num_shelfs=1), # above bed
-  # place('BR', shelf, (obs_w, SHELF_L, obs_h), 'R', [0,bw,obs_z], num_shelfs=4), # above battery/toilet
   # place('BL', shelf, (long_shelf_w, SHELF_L, T_HEIGHT), 'L', [0,gl,0], num_shelfs=5), # long side shelf
 
   # # chair
@@ -434,12 +439,8 @@ def layout1():
   # # fridge
   # place('FL', fridge, (FRIDGE_W,FRIDGE_L,FRIDGE_H), 'R', [0,-1,1]),
 
-  # # toilet
-  # place('BR', toilet, (TOILET_W,TOILET_L,TOILET_H), '', [-toilet_offset,gl,0], t=_time),
 
   # # # electronics (battery, solar charger, etc)
-  # place('BR', battery, (BAT_W, BAT_L, BAT_H), '', [0,k_off-BAT_L,0]),
-  # place('BR', battery, (BAT_W, BAT_L, BAT_H), '', [-1.1 * BAT_W,k_off-BAT_L,0]),
 
   # # water
   # place('FR', water, (WATER_W, WATER_L, WATER_H), '', [-T_WIDTH/4.0,VNOSE_DEPTH,0]),
