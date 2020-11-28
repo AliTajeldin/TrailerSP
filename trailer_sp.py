@@ -4,6 +4,8 @@ from solid import *
 from solid.utils import *  # Not required, but the utils module is useful
 import math as M
 
+from lib.bed import bed, BedL
+
 colors = [
     # (249, 65, 68),    #0
     (135, 65, 68, 128),    #0
@@ -18,9 +20,13 @@ colors = [
 SHOW_ROOF = True
 SHOW_FLOOR = True
 
+# silver eagle 6x12
 T_WIDTH = 6 * 12
 T_LENGTH = 12 * 12
-T_HEIGHT = 6 * 12
+# silver start 79"x14'
+# T_WIDTH = 79
+# T_LENGTH = 14 * 12
+T_HEIGHT = 6.25 * 12
 T_COLOR = colors[6]
 T_DOOR_W = 30
 T_DOOR_OFF = 6
@@ -191,13 +197,6 @@ def solar():
   center_x = (T_WIDTH - SOLAR_L)/2.0
   return translate([center_x, 0, T_HEIGHT])(norm_color(SOLAR_C)(ss))
 
-def bed(size_v):
-  (w,l,h) = size_v
-  b = union()(
-    cube([w,l,1]),
-    translate([1,1,1])(cube([w-2,l-2,h-1]))
-  )
-  return norm_color(BED_COLOR)(b)
 
 def shelf(size_v, num_shelfs = SHELF_COUNT, with_back=False, color=SHELF_COLOR):
   (w,l,h) = size_v
@@ -369,9 +368,12 @@ def trailer1(_time = 0.0):
   place('FL', table, (TABLE_W,TABLE_L,TABLE_H), 180, [CHAIR_L-TABLE_W+2,0,0]),
 )
 
-t0 = trailer0(_time=0)
-t1 = right(T_WIDTH * 2)(trailer1(_time=0))
-scad_render_to_file(union()(t0, t1))
+# t0 = trailer0(_time=0)
+# t1 = right(T_WIDTH * 2)(trailer1(_time=0))
+# scad_render_to_file(union()(t0, t1))
+t = BedL().render()
+scad_render_to_file(union()(t))
+
 # scad_render_animated_file(trailer0)
     
 
