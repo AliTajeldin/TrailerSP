@@ -13,6 +13,7 @@ from lib.battery import Battleborn100ah
 from lib.toilet import DryFlushToilet
 from lib.stove import Stove
 from lib.chair import Chair
+from lib.table import LagunTable
 
 
 colors = [
@@ -390,6 +391,7 @@ def layout1():
   toilet = DryFlushToilet()
   bat = Battleborn100ah()
   chair = Chair()
+  table = LagunTable([12,24,33])
   kitchen_w = 2.5 * 12
   shelf_depth = 18 # depth of side shelfs
 
@@ -453,6 +455,9 @@ def layout1():
   s.place( Shelf((long_shelf_w, shelf_depth, sh), count=3),
            rel_to='BL', rotation='L', offset=[0,gl,0])
 
+  # --- table ---
+  s.place(table, rel_to='FL', rotation=180, offset=[chair.getL()-table.getW()+2,0,0])
+
   # --- render entire trailer ---
   return s.render_all()
 
@@ -464,8 +469,6 @@ def layout1():
   # place('FR', water, (WATER_W, WATER_L, WATER_H), '', [-T_WIDTH/4.0,VNOSE_DEPTH,0]),
   # place('FR', water, (WATER_W, WATER_L, WATER_H), '', [-T_WIDTH/4.0 - WATER_W - 2,VNOSE_DEPTH,0]),
 
-  # # table
-  # place('FL', table, (TABLE_W,TABLE_L,TABLE_H), 180, [CHAIR_L-TABLE_W+2,0,0]),
 
 # t0 = trailer0(_time=0)
 # t1 = right(T_WIDTH * 2)(trailer1(_time=0))
