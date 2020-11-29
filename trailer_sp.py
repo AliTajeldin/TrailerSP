@@ -8,6 +8,7 @@ from lib.bed import BedL, BedM, BedS
 from lib.shell import SilverEagle, SilverStar
 from lib.solar import SolarRenegy200w, SolarRenegy300w
 from lib.shelf import Shelf
+from lib.battery import Battleborn100ah
 from lib.toilet import DryFlushToilet
 
 colors = [
@@ -381,6 +382,7 @@ def layout1():
   bed = BedL(s.getW())
   solar = SolarRenegy200w()
   toilet = DryFlushToilet()
+  bat = Battleborn100ah()
   kitchen_w = 2.5 * 12
   shelf_depth = 18 # depth of side shelfs
 
@@ -404,13 +406,6 @@ def layout1():
   s.place( Shelf((bw, gl, bed_z), count=0, with_back=True, color=gc), rel_to='BR')
   s.place( Shelf((sw-bw, gl, bed_z), count=2, with_back=True, color=gc), rel_to='BL')
 
-  # --- toilet ---
-  s.place(toilet, rel_to='BR', offset=[0,gl,0])
-
-  # --- elect here (battery + chargers)
-  # place('BR', battery, (BAT_W, BAT_L, BAT_H), '', [0,k_off-BAT_L,0]),
-  # place('BR', battery, (BAT_W, BAT_L, BAT_H), '', [-1.1 * BAT_W,k_off-BAT_L,0]),
-
   # --- obs: over battery shelf ---
   obs_w = elect_box_w
   obs_z = elect_box_h
@@ -423,6 +418,14 @@ def layout1():
   k_off = bw + obs_w
   s.place( Shelf((kitchen_w, shelf_depth, kh), count=1, color=kc), rel_to='BR', rotation='R', offset=[0,k_off,0])
   s.place( Shelf((shelf_depth, 4, sh-kh), count=3, color=kc, with_back=True), rel_to='BR', rotation=180, offset=[0,k_off,kh])
+
+  # --- toilet ---
+  s.place(toilet, rel_to='BR', offset=[0,gl,0])
+
+  # --- elect cabinet (bat + chargers) ---
+  bat_y_off = k_off - bat.getW()
+  s.place(bat, rel_to='BR', rotation='R', offset=[0,bat_y_off,0])
+  s.place(bat, rel_to='BR', rotation='R', offset=[-bat.getL() - 1,bat_y_off,0])
 
   # --- render entire trailer ---
   return s.render_all()
