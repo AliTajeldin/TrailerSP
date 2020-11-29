@@ -10,6 +10,7 @@ from lib.solar import SolarRenegy200w, SolarRenegy300w
 from lib.shelf import Shelf
 from lib.battery import Battleborn100ah
 from lib.toilet import DryFlushToilet
+from lib.stove import Stove
 
 colors = [
     # (249, 65, 68),    #0
@@ -418,6 +419,8 @@ def layout1():
   k_off = bw + obs_w
   s.place( Shelf((kitchen_w, shelf_depth, kh), count=1, color=kc), rel_to='BR', rotation='R', offset=[0,k_off,0])
   s.place( Shelf((shelf_depth, 4, sh-kh), count=3, color=kc, with_back=True), rel_to='BR', rotation=180, offset=[0,k_off,kh])
+  stove_off = s.door_off + s.door_w + 1
+  s.place( Stove(), rel_to='FR', rotation='R', offset=[-1,-stove_off,kh])
 
   # --- toilet ---
   s.place(toilet, rel_to='BR', offset=[0,gl,0])
