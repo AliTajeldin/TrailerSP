@@ -2,18 +2,24 @@ from solid import *
 from solid.utils import *  # Not required, but the utils module is useful
 from lib.item import Item
 
+# space between panels
+PANEL_SEP=2
+PANEL_H=1
+
 class SolarBase(Item):
-  def __init__(self, w, l, count):
-    super().__init__((w,l,1.5))
+  def __init__(self, panel_w, panel_l, count):
+    self.panel_w = panel_w
+    self.panel_l = panel_l
     self.color = (243, 114, 44, 100)
     self.count = count
+    w = count * (panel_w + PANEL_SEP) - PANEL_SEP
+    super().__init__((panel_l,w,PANEL_H))
 
   def render(s):
-    (w,l,h) = s.getDim()
-    sd = w + 2.0 # each panel has 2 inch in between
+    sd = s.panel_w + PANEL_SEP
     ss = union()
     for i in range(s.count):
-      ss.add(forward(i*sd)(cube([l,w,h])))
+      ss.add(forward(i*sd)(cube([s.panel_l,s.panel_w,PANEL_H])))
     return s.c(s.color, ss)
 
 class SolarRenegy300w(SolarBase):

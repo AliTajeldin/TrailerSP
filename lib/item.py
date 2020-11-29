@@ -12,13 +12,13 @@ class Item(ABC):
     return s.dim
 
   def getW(s):
-    return s.dim[0]
+    return s.getDim()[0]
 
   def getL(s):
-    return s.dim[1]
+    return s.getDim()[1]
 
   def getH(s):
-    return s.dim[2]
+    return s.getDim()[2]
 
   def c(s, cv, item):
     """apply color vector to given item and return the colored item"""
@@ -47,7 +47,8 @@ class Item(ABC):
 
   def place(s, item, rel_to='BL', rotation='', offset=None):
     """places a child item inside this item.
-       rel_to: BL, FL, BR, FR corresponding to Bottom/Front Left/Right
+       rel_to: BL, FL, BR, FR corresponding to BoBackttom/Front Left/Right
+               TBL, TFL, TBR, TFR same as above but relative to top of parent item
        rotation: L,R,180 to rotate item 90,-90,180 before placing (rot around Z-Axis)
        offset: (x,y,z) offset to apply to item after rotation
        Note: the placement takes the w,l,h of child item when placing.  if child item is placed on the right side of this item,
@@ -66,13 +67,15 @@ class Item(ABC):
     if rotation == 180:
       out = translate([w,l,0])(rotate(180)(out))
 
-    if rel_to == 'FL':
+    if rel_to in ('FL', 'TFL'):
       out = translate([0,pl-l,0])(out)
-    if rel_to == 'FR':
+    if rel_to in ('FR', 'TFR'):
       out = translate([pw-w,pl-l,0])(out)
-    if rel_to == 'BR':
+    if rel_to in ('BR', 'TBR'):
       out = translate([pw-w,0,0])(out)
-      
+    if rel_to[0] == 'T':
+      out = up(ph-h)(out)
+
     if offset:
       out = translate(offset)(out)
 

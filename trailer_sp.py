@@ -395,10 +395,13 @@ def layout1():
 
   # --- bed ---
   bed_z = sh - 38 - bh # 38" sitting clearance max bed Z
-  s.place(bed, rotation='L', offset=[0,0,bed_z])
+  s.place( bed, rotation='L', offset=[0,0,bed_z])
+  bed_shelf_h = sh - bed_z - bh - 12
+  s.place( Shelf((bw, shelf_depth, bed_shelf_h), count=1),
+           rotation='R', rel_to='TBR')
 
   # --- solar ---
-  solar_x_off = (sw - s.getW()) / 2.0
+  solar_x_off = (sw - solar.getW()) / 2.0
   s.place(solar, offset=[solar_x_off,0,sh])
 
   # --- garage ---
@@ -411,16 +414,19 @@ def layout1():
   obs_w = elect_box_w
   obs_z = elect_box_h
   obs_h = sh - obs_z
-  s.place( Shelf((obs_w,shelf_depth,obs_h), count=4), rel_to='BR', rotation='R', offset=[0,bw,obs_z])
+  s.place( Shelf((obs_w,shelf_depth,obs_h), count=4),
+           rel_to='BR', rotation='R', offset=[0,bw,obs_z])
 
   # --- kitchen/cooking area ---
   kh = s.vnose_h
   kc = (216, 230, 92)
   k_off = bw + obs_w
-  s.place( Shelf((kitchen_w, shelf_depth, kh), count=1, color=kc), rel_to='BR', rotation='R', offset=[0,k_off,0])
-  s.place( Shelf((shelf_depth, 4, sh-kh), count=3, color=kc, with_back=True), rel_to='BR', rotation=180, offset=[0,k_off,kh])
+  s.place( Shelf((kitchen_w, shelf_depth, kh), count=1, color=kc),
+           rel_to='BR', rotation='R', offset=[0,k_off,0])
+  s.place( Shelf((shelf_depth, 4, sh-kh), count=3, color=kc, with_back=True),
+           rel_to='BR', rotation=180, offset=[0,k_off,kh])
   stove_off = s.door_off + s.door_w + 1
-  s.place( Stove(), rel_to='FR', rotation='R', offset=[-1,-stove_off,kh])
+  s.place(Stove(), rel_to='FR', rotation='R', offset=[-1,-stove_off,kh])
 
   # --- toilet ---
   s.place(toilet, rel_to='BR', offset=[0,gl,0])
@@ -433,10 +439,8 @@ def layout1():
   # --- render entire trailer ---
   return s.render_all()
 
-  # BED_SHELF_H = T_HEIGHT - BED_Z - BED_HEIGHT - 12 # allow for clearance above mattress
   # long_shelf_w = T_LENGTH - gl - CHAIR_W
 
-  # place('BR', shelf, (bw, SHELF_L, BED_SHELF_H), 'R', [0,0,T_HEIGHT-BED_SHELF_H], num_shelfs=1), # above bed
   # place('BL', shelf, (long_shelf_w, SHELF_L, T_HEIGHT), 'L', [0,gl,0], num_shelfs=5), # long side shelf
 
   # # chair
