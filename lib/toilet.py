@@ -7,7 +7,7 @@ from lib.item import Item
 class Toilet(Item):
   def __init__(self, dim):
     super().__init__(dim)
-    self.color = (0,255,255)
+    self.color = (200,200,200)
   
   def render(s):
     (w,l,h) = s.getDim()

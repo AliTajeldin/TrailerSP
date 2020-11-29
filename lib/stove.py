@@ -33,6 +33,6 @@ class Stove(Item):
 
     body = s.c(s.color, union()(legs, top))
 
-    gas = translate([bw+bd/2,0,bd/2])(rotate([-90,0,0])(cylinder(r=bd/2,h=bw)))
+    gas = translate([bw+bd/2,0,bd/2])(rotate([-90,0,0])(cylinder(r=bd/2,h=bw,segments=20)))
     gas = s.c(s.bottle_color, gas)
     return union()(body, gas)

@@ -389,6 +389,7 @@ def layout1():
   solar = SolarRenegy200w()
   toilet = DryFlushToilet()
   bat = Battleborn100ah()
+  chair = Chair()
   kitchen_w = 2.5 * 12
   shelf_depth = 18 # depth of side shelfs
 
@@ -438,18 +439,19 @@ def layout1():
 
   # --- elect cabinet (bat + chargers) ---
   bat_y_off = k_off - bat.getW()
-  s.place(bat, rel_to='BR', rotation='R', offset=[0,bat_y_off,0])
-  s.place(bat, rel_to='BR', rotation='R', offset=[-bat.getL() - 1,bat_y_off,0])
+  s.place(bat, rel_to='BR', rotation='L', offset=[0,bat_y_off,0])
+  s.place(bat, rel_to='BR', rotation='L', offset=[-bat.getL() - 1,bat_y_off,0])
 
   # --- chair ---
-  s.place(Chair(), rel_to='FL', rotation='R')
+  s.place(chair, rel_to='FL', rotation='R')
 
   # --- fridge ---
   s.place(fridge, rel_to='FL', rotation='R', offset=[2,-1,1])
 
   # --- long side shelf ---
-  # long_shelf_w = sl - gl - chair.getW()
-  # place('BL', shelf, (long_shelf_w, SHELF_L, T_HEIGHT), 'L', [0,gl,0], num_shelfs=5), # long side shelf
+  long_shelf_w = sl - gl - chair.getW()
+  s.place( Shelf((long_shelf_w, shelf_depth, sh), count=3),
+           rel_to='BL', rotation='L', offset=[0,gl,0])
 
   # --- render entire trailer ---
   return s.render_all()
