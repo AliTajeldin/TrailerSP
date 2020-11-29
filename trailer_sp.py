@@ -11,6 +11,7 @@ from lib.shelf import Shelf
 from lib.battery import Battleborn100ah
 from lib.toilet import DryFlushToilet
 from lib.stove import Stove
+from lib.chair import Chair
 
 colors = [
     # (249, 65, 68),    #0
@@ -79,7 +80,8 @@ CHAIR_W = 30
 CHAIR_L = 20
 CHAIR_H = 42
 CHAIR_LEG_H = 18
-CHAIR_C = colors[2]
+CHAIR_C =     (248, 150, 30),
+
 
 # dry flush toilet
 TOILET_W = 16
@@ -436,18 +438,20 @@ def layout1():
   s.place(bat, rel_to='BR', rotation='R', offset=[0,bat_y_off,0])
   s.place(bat, rel_to='BR', rotation='R', offset=[-bat.getL() - 1,bat_y_off,0])
 
-  # --- render entire trailer ---
-  return s.render_all()
-
-  # long_shelf_w = T_LENGTH - gl - CHAIR_W
-
-  # place('BL', shelf, (long_shelf_w, SHELF_L, T_HEIGHT), 'L', [0,gl,0], num_shelfs=5), # long side shelf
-
-  # # chair
-  # place('FL', chair, (CHAIR_W, CHAIR_L, CHAIR_H), 'R', [0,0,0]),
+  # --- chair ---
+  s.place(Chair(), rel_to='FL', rotation='R')
 
   # # fridge
   # place('FL', fridge, (FRIDGE_W,FRIDGE_L,FRIDGE_H), 'R', [0,-1,1]),
+
+
+  # --- long side shelf ---
+  # long_shelf_w = sl - gl - chair.getW()
+  # place('BL', shelf, (long_shelf_w, SHELF_L, T_HEIGHT), 'L', [0,gl,0], num_shelfs=5), # long side shelf
+
+  # --- render entire trailer ---
+  return s.render_all()
+
 
 
   # # # electronics (battery, solar charger, etc)
