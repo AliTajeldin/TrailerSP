@@ -7,11 +7,13 @@ import math as M
 from lib.bed import BedL, BedM, BedS
 from lib.shell import SilverEagle, SilverStar
 from lib.solar import SolarRenegy200w, SolarRenegy300w
+from lib.fridge import FridgeIcecoGO20, FridgeIcecoVL35, FridgeAlpicoolT60
 from lib.shelf import Shelf
 from lib.battery import Battleborn100ah
 from lib.toilet import DryFlushToilet
 from lib.stove import Stove
 from lib.chair import Chair
+
 
 colors = [
     # (249, 65, 68),    #0
@@ -383,6 +385,7 @@ def layout1():
   s = SilverEagle()
   # s = SilverStar()
   bed = BedL(s.getW())
+  fridge = FridgeIcecoVL35()
   solar = SolarRenegy200w()
   toilet = DryFlushToilet()
   bat = Battleborn100ah()
@@ -441,9 +444,8 @@ def layout1():
   # --- chair ---
   s.place(Chair(), rel_to='FL', rotation='R')
 
-  # # fridge
-  # place('FL', fridge, (FRIDGE_W,FRIDGE_L,FRIDGE_H), 'R', [0,-1,1]),
-
+  # --- fridge ---
+  s.place(fridge, rel_to='FL', rotation='R', offset=[2,-1,1])
 
   # --- long side shelf ---
   # long_shelf_w = sl - gl - chair.getW()
