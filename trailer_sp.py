@@ -191,7 +191,8 @@ def rear_bed_layout():
 from lib.bed import Bed8020
 b = Bed8020([6*12, 40, 36])
 t = b.render_all()
-b.print_bom()
+b.bom.print()
+# print(b.bom._group_children())
 
 # from lib.rail8020 import Rail1010, Rail1515, Rail2020
 # t = union()(Rail1010(3).render_all(), forward(4)(Rail1515(3).render_all()))

@@ -2,13 +2,38 @@ from abc import ABC, abstractmethod
 from solid import *
 from solid.utils import *  # Not required, but the utils module is useful
 
+class BillOfMaterial(object):
+  def __init__(self, item):
+    self.item = item
+    self.c_items = []
+
+  def add_child(s, child):
+    s.c_items.append(child)
+
+  def _group_children(s):
+    """group similar children and maintain count to avoid repeated bom output"""
+    gc = {}
+    for c in s.c_items:
+      cd = c.desc()
+      if cd in gc:
+        gc[cd][0] += 1
+      else:
+        gc[cd] = [1,c]
+    return gc
+
+  def print(s, indent='', count=1):
+    print("{0}{1} X {2}".format(indent, count, s.item.desc()))
+    for [count, c] in s._group_children().values():
+      c.bom.print(indent + '  ', count)
+
+
 class Item(ABC):
   """base class of all items that need to be placed in the trailer"""
   def __init__(self, dim):
     self.dim = dim
     self.r_children = [] # rendered children
-    self.i_children = [] # children items
-    self._bom = None
+    self._render_cache = 'not-rendered' # can't use None as marker as it is a valid render result
+    self.bom = BillOfMaterial(self)
 
   def getDim(s):
     return s.dim
@@ -38,29 +63,20 @@ class Item(ABC):
     """one line description of what this item is"""
     return type(s).__name__ + ': ' + str(s.getDim())
 
-  def bom(s):
-    if s._bom is None:
-      s._bom = [s.desc()] + [c.bom() for c in s.i_children]
-    return s._bom
-
-  def _print_bom(s, bom, indent):
-    for i in bom:
-      if type(i) == type([]):
-        s._print_bom(i, indent + '  ')
-      else:
-        print(indent + i)
-
-  def print_bom(s):
-    b = s.bom()
-    s._print_bom(b, '')
-
   @abstractmethod
   def render(s):
     pass
 
+  def _render(s):
+    """use cached render to avoid calling `render` twice when same item
+       is placed twice inside parent"""
+    if s._render_cache == 'not-rendered':
+      s._render_cache = s.render()
+    return s._render_cache
+
   def render_all(s):
     """render this item plus render_all of it's children"""
-    me_and_children = [s.render()] + s.r_children
+    me_and_children = [s._render()] + s.r_children
     return union()([x for x in me_and_children if x])
 
   @staticmethod
@@ -107,6 +123,6 @@ class Item(ABC):
       out = translate(offset)(out)
 
     s.r_children.append(out)
-    s.i_children.append(item)
+    s.bom.add_child(item)
 
     return out
