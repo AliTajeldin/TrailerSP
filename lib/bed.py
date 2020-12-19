@@ -17,6 +17,9 @@ class BedTop(Item):
       cube([w,l,1]),
       translate([1,1,1])(cube([w-2,l-2,h-1]))
     )
+
+    x = Rail1515(10)
+    s.place(x, rel_to='BL', rotation='YL', offset=[5,5,0])
     return s.c(s.color, b)
 
 class Bed8020(Item):

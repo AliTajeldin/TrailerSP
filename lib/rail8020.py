@@ -12,6 +12,9 @@ class Rail8020(Item):
     self.size = size
     self.length = length
   
+  def desc(s):
+    return type(s).__name__ + ': ' + str(s.length)
+
   def render(self):
     s = self.size
     rw = 0.37 * s # rail edge width (for a single triangle)

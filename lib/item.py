@@ -6,7 +6,9 @@ class Item(ABC):
   """base class of all items that need to be placed in the trailer"""
   def __init__(self, dim):
     self.dim = dim
-    self.children = []
+    self.r_children = [] # rendered children
+    self.i_children = [] # children items
+    self._bom = None
 
   def getDim(s):
     return s.dim
@@ -32,13 +34,33 @@ class Item(ABC):
     """apply rotation to given item"""
     return rotate(a)(item)
 
+  def desc(s):
+    """one line description of what this item is"""
+    return type(s).__name__ + ': ' + str(s.getDim())
+
+  def bom(s):
+    if s._bom is None:
+      s._bom = [s.desc()] + [c.bom() for c in s.i_children]
+    return s._bom
+
+  def _print_bom(s, bom, indent):
+    for i in bom:
+      if type(i) == type([]):
+        s._print_bom(i, indent + '  ')
+      else:
+        print(indent + i)
+
+  def print_bom(s):
+    b = s.bom()
+    s._print_bom(b, '')
+
   @abstractmethod
   def render(s):
     pass
 
   def render_all(s):
     """render this item plus render_all of it's children"""
-    me_and_children = [s.render()] + s.children
+    me_and_children = [s.render()] + s.r_children
     return union()([x for x in me_and_children if x])
 
   @staticmethod
@@ -84,6 +106,7 @@ class Item(ABC):
     if offset:
       out = translate(offset)(out)
 
-    s.children.append(out)
+    s.r_children.append(out)
+    s.i_children.append(item)
 
     return out
