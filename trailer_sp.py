@@ -4,7 +4,7 @@ from solid import *
 from solid.utils import *  # Not required, but the utils module is useful
 import math as M
 
-from lib.bed import BedL, BedM, BedS
+from lib.bed import BedTop
 from lib.shell import SilverEagle, SilverStar
 from lib.solar import SolarRenegy200w, SolarRenegy300w
 from lib.fridge import FridgeIcecoGO20, FridgeIcecoVL35, FridgeAlpicoolT60
@@ -20,7 +20,7 @@ def side_back_bed_layout():
     # --- Config ---
   s = SilverEagle()
   # s = SilverStar()
-  bed = BedM(6*12)
+  bed = BedTop(30, 6*12)
   fridge = FridgeIcecoVL35()
   solar = SolarRenegy200w()
   toilet = DryFlushToilet()
@@ -105,7 +105,7 @@ def rear_bed_layout():
   # --- Config ---
   s = SilverEagle()
   # s = SilverStar()
-  bed = BedL(s.getW())
+  bed = BedTop(36, s.getW())
   fridge = FridgeIcecoVL35()
   solar = SolarRenegy200w()
   toilet = DryFlushToilet()
@@ -187,9 +187,11 @@ def rear_bed_layout():
   return s.render_all()
 
 # t = side_back_bed_layout()
-t = rear_bed_layout()
-# from lib.rail8020 import Rail1515, Rail2020
-# t = union()(Rail2020(3).render_all(), forward(4)(Rail1515(3).render_all()))
+# t = rear_bed_layout()
+from lib.bed import Bed8020
+t = Bed8020([6*12, 40, 36]).render_all()
+# from lib.rail8020 import Rail1010, Rail1515, Rail2020
+# t = union()(Rail1010(3).render_all(), forward(4)(Rail1515(3).render_all()))
 scad_render_to_file(union()(t))
     
 

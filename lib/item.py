@@ -39,7 +39,7 @@ class Item(ABC):
   def render_all(s):
     """render this item plus render_all of it's children"""
     me_and_children = [s.render()] + s.children
-    return union()(me_and_children) 
+    return union()([x for x in me_and_children if x])
 
   @staticmethod
   def swap(a,b):
@@ -47,9 +47,10 @@ class Item(ABC):
 
   def place(s, item, rel_to='BL', rotation='', offset=None):
     """places a child item inside this item.
-       rel_to: BL, FL, BR, FR corresponding to BoBackttom/Front Left/Right
+       rel_to: BL, FL, BR, FR corresponding to BAck/Front Left/Right
                TBL, TFL, TBR, TFR same as above but relative to top of parent item
        rotation: L,R,180 to rotate item 90,-90,180 before placing (rot around Z-Axis)
+                YL to rotate item 90 along y-axis to vertical
        offset: (x,y,z) offset to apply to item after rotation
        Note: the placement takes the w,l,h of child item when placing.  if child item is placed on the right side of this item,
        then the offset is from the right side of the child item.
@@ -58,6 +59,7 @@ class Item(ABC):
     (w,l,h) = item.getDim()
     out = item.render_all()
 
+    # print("placing", s.getDim(), item.getDim(), rel_to, rotation, offset)
     if rotation == 'L':
       out = translate([l,0,0])(rotate(90)(out))
       (w,l) = Item.swap(w,l)
@@ -66,6 +68,9 @@ class Item(ABC):
       (w,l) = Item.swap(w,l)
     if rotation == 180:
       out = translate([w,l,0])(rotate(180)(out))
+    if rotation == 'YL':
+      out = translate([h,0,0])(rotate([0,-90,0])(out))
+      (w,h) = Item.swap(w,h)
 
     if rel_to in ('FL', 'TFL'):
       out = translate([0,pl-l,0])(out)

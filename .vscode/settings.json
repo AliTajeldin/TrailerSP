@@ -7,6 +7,9 @@
             "cmd": "/usr/bin/env python trailer_sp.py"
         }
     ]
-  }
+  },
+  "gitlens.codeLens.authors.enabled": false,
+  "gitlens.codeLens.recentChange.enabled": false,
+  "gitlens.currentLine.enabled": false
 
 }
