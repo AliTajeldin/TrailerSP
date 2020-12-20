@@ -189,7 +189,7 @@ def rear_bed_layout():
 # t = side_back_bed_layout()
 # t = rear_bed_layout()
 from lib.bed import Bed8020
-b = Bed8020([6*12, 40, 36])
+b = Bed8020([6*12, 36, 40])
 t = b.render_all()
 b.bom.print()
 # print(b.bom._group_children())

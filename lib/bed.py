@@ -35,22 +35,30 @@ class Bed8020(Item):
 
     # horizontal rails along width
     rw = Rail1515(w)
-    s.place(rw, rel_to='TFL', offset=[0,0,-BED_TOP_HEIGHT])
-    s.place(rw, rel_to='TBL', offset=[0,0,-BED_TOP_HEIGHT])
+    s.place(rw, rel_to='FL')
+    s.place(rw, rel_to='BL')
+    s.place(rw, rel_to='FL', offset=[0,0,fh-1.5])
+    s.place(rw, rel_to='BL', offset=[0,0,fh-1.5])
 
     # leg rails
-    legl = fh-1.5
-    rleg = Rail1515(legl)
-    s.place(rleg, rel_to='FL', rotation='YL')
-    s.place(rleg, rel_to='BL', rotation='YL')
-    s.place(rleg, rel_to='FR', rotation='YL')
-    s.place(rleg, rel_to='BR', rotation='YL')
+    leg = Rail1515(fh - 2*1.5)
+    s.place(leg, rel_to='FL', rotation='YL', offset=[0,0,1.5])
+    s.place(leg, rel_to='BL', rotation='YL', offset=[0,0,1.5])
+    s.place(leg, rel_to='FR', rotation='YL', offset=[0,0,1.5])
+    s.place(leg, rel_to='BR', rotation='YL', offset=[0,0,1.5])
 
     # depth support pieces
-    dleg = Rail1515(l - 2*1.5)
-    s.place(dleg, rel_to='BL', rotation='L', offset=[0,1.5,0])
-    s.place(dleg, rel_to='BL', rotation='L', offset=[0,1.5,legl])
-    s.place(dleg, rel_to='BR', rotation='L', offset=[0,1.5,0])
-    s.place(dleg, rel_to='BR', rotation='L', offset=[0,1.5,legl])
+    dep = Rail1515(l - 2*1.5)
+    s.place(dep, rel_to='BL', rotation='L', offset=[0,1.5,0])
+    s.place(dep, rel_to='BL', rotation='L', offset=[0,1.5,fh-1.5])
+    s.place(dep, rel_to='BR', rotation='L', offset=[0,1.5,0])
+    s.place(dep, rel_to='BR', rotation='L', offset=[0,1.5,fh-1.5])
+
+    # add mid leg/support if specified
+    if s.mid_offset:
+      s.place(leg, rel_to='FL', rotation='YL', offset=[s.mid_offset,0,1.5])
+      s.place(leg, rel_to='BL', rotation='YL', offset=[s.mid_offset,0,1.5])
+      s.place(dep, rel_to='BL', rotation='L',  offset=[s.mid_offset,1.5,0])
+      s.place(dep, rel_to='BL', rotation='L',  offset=[s.mid_offset,1.5,fh-1.5])
 
     return None
