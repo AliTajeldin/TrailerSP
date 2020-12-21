@@ -1,7 +1,7 @@
 from solid import *
 from solid.utils import *  # Not required, but the utils module is useful
 from lib.item import Item
-from lib.shelf import Shelf
+from lib.shelf import ShelfUnit
 
 class Chair(Item):
   def __init__(self):
@@ -14,7 +14,7 @@ class Chair(Item):
     (w,l,h) = s.getDim()
     leg_h = s.chair_leg_h
 
-    seat = Shelf([w,l,leg_h], count=0, color=s.color).render_all()
+    seat = ShelfUnit([w,l,leg_h], count=0, color=s.color).render_all()
     back = up(leg_h)(cube([w,2,h-leg_h]))
     seat = s.c(s.color, union()(seat, back))
 

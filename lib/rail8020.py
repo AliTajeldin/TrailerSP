@@ -6,17 +6,16 @@ INCH_MM = 0.0393701
 
 
 class Rail8020(Item):
-  def __init__(self, size, length, color):
-    super().__init__([length,size,size])
+  def __init__(self, length, color):
+    super().__init__([length,self.SIZE,self.SIZE])
     self.color = color
-    self.size = size
     self.length = length
   
   def desc(s):
     return type(s).__name__ + ': ' + str(s.length)
 
   def render(self):
-    s = self.size
+    s = self.SIZE
     rw = 0.37 * s # rail edge width (for a single triangle)
     rt = 0.09 * s # rail thickness
 
@@ -32,17 +31,21 @@ class Rail8020(Item):
     return r
 
 class Rail1515(Rail8020):
+  SIZE=1.5
   def __init__(self, length, color=(84, 227, 136)):
-    super().__init__(1.5, length, color)
+    super().__init__(length, color)
 
 class Rail1010(Rail8020):
+  SIZE=1.0
   def __init__(self, length, color=(193, 235, 56)):
-    super().__init__(1.0, length, color)
+    super().__init__(length, color)
 
 class Rail2020(Rail8020):
+  SIZE=20 * INCH_MM
   def __init__(self, length, color=(219,90,178)):
-    super().__init__(20 * INCH_MM, length, color)
+    super().__init__(length, color)
 
 class Rail4040(Rail8020):
+  SIZE=40 * INCH_MM
   def __init__(self, length, color=(219,90,178)):
-    super().__init__(40 * INCH_MM, length, color)
+    super().__init__(length, color)

@@ -79,6 +79,10 @@ class Item(ABC):
     me_and_children = [s._render()] + s.r_children
     return union()([x for x in me_and_children if x])
 
+  def print_bom(s):
+    s.render_all()
+    s.bom.print()
+
   @staticmethod
   def swap(a,b):
     return (b,a)
