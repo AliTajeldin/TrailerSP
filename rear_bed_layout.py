@@ -19,8 +19,8 @@ from lib.wood import Ply_1_2, Panel_1_8
 
 def rear_bed_layout():
   # --- Config ---
-  s = SilverEagle()
-  # s = SilverStar()
+  # s = SilverEagle()
+  s = SilverStar()
   g_shelf_w = 40
   bed = Bed8020([s.getW(), 36, s.getH() - 38], mid_offset=g_shelf_w-1.5)
   fridge = FridgeIcecoVL35()
@@ -45,7 +45,7 @@ def rear_bed_layout():
   s.place( ShelfUnit((bl, shelf_depth, 24), count=1),
            rotation='R', rel_to='TBR')
   gs = Shelf8020(g_shelf_w, bl, Rail1515)
-  s.place(gs, offset=[0,0,15])
+  s.place(gs, offset=[0,0,18])
 
   # --- solar ---
   solar_x_off = (sw - solar.getW()) / 2.0

@@ -55,6 +55,8 @@ class Bed8020(Item):
     s.place(dep, rel_to='BL', rotation='L', offset=[0,1.5,fh-1.5])
     s.place(dep, rel_to='BR', rotation='L', offset=[0,1.5,0])
     s.place(dep, rel_to='BR', rotation='L', offset=[0,1.5,fh-1.5])
+    s.place(dep, rel_to='BL', rotation='L', offset=[0.25*w,1.5,fh-1.5])
+    s.place(dep, rel_to='BL', rotation='L', offset=[0.75*w,1.5,fh-1.5])
 
     # add mid leg/support if specified
     if s.mid_offset:

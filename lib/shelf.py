@@ -26,22 +26,24 @@ class ShelfUnit(Item):
 
 class Shelf8020(Item):
   """single shelf (not unit). assumes 8020 frame is already there"""
-  def __init__(self, w, l, railFactory, woodFactory=Panel_1_8):
+  def __init__(self, w, l, railFactory=Rail1515, woodFactory=Panel_1_8, numSupports=1):
     super().__init__([w, l, railFactory.SIZE])
     self.railFactory = railFactory
     self.woodFactory = woodFactory
+    self.numSupports = numSupports
 
   def render(s):
     (w,l,h) = s.getDim()
     sz = s.railFactory.SIZE
 
-    d_rail = s.railFactory(l - 2*sz)
     h_rail = s.railFactory(w - 2*sz)
-
     s.place(h_rail, offset=[sz,0,0])
     s.place(h_rail, offset=[sz,0,0], rel_to='FL')
-    s.place(d_rail, rotation='L', offset=[0,sz,0])
-    s.place(d_rail, rotation='L', offset=[0,sz,0], rel_to='BR')
+
+    d_rail = s.railFactory(l - 2*sz)
+    off = (w-sz) / (s.numSupports+1)
+    for i in range(s.numSupports+2):
+      s.place(d_rail, rotation='L', offset=[i * off,sz,0])
 
     if s.woodFactory:
       sheet = s.woodFactory(w - 2*sz, l)
