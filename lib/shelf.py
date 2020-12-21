@@ -3,6 +3,7 @@ from solid import *
 from solid.utils import *  # Not required, but the utils module is useful
 from lib.item import Item
 from lib.rail8020 import Rail1515
+from lib.wood import Panel_1_8
 
 class ShelfUnit(Item):
   def __init__(self, dim, count=3, with_back=False, color=(144, 190, 109)):
@@ -25,7 +26,7 @@ class ShelfUnit(Item):
 
 class Shelf8020(Item):
   """single shelf (not unit). assumes 8020 frame is already there"""
-  def __init__(self, w, l, railFactory, woodFactory=None):
+  def __init__(self, w, l, railFactory, woodFactory=Panel_1_8):
     super().__init__([w, l, railFactory.SIZE])
     self.railFactory = railFactory
     self.woodFactory = woodFactory
