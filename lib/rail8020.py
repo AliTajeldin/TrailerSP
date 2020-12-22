@@ -37,7 +37,7 @@ class Rail1515(Rail8020):
 
 class Rail1010(Rail8020):
   SIZE=1.0
-  def __init__(self, length, color=(193, 235, 56)):
+  def __init__(self, length, color=(204, 69, 96)):
     super().__init__(length, color)
 
 class Rail2020(Rail8020):

@@ -85,9 +85,9 @@ class RearBedLayout(Item):
     s.place(toilet, rel_to='BR', offset=[0,gl,0])
 
     # --- elect cabinet (bat + chargers) ---
-    bat_y_off = k_off - bat.getW()
-    s.place(bat, rel_to='BR', rotation='L', offset=[0,bat_y_off,0])
-    s.place(bat, rel_to='BR', rotation='L', offset=[-bat.getL() - 1,bat_y_off,0])
+    bat_y_off = gl + 2
+    s.place(bat, rel_to='BL', rotation='L', offset=[2,bat_y_off,0])
+    s.place(bat, rel_to='BL', rotation='L', offset=[3 + bat.getL(),bat_y_off,0])
 
     # --- chair ---
     s.place(chair, rel_to='FL', rotation='R')
@@ -96,9 +96,14 @@ class RearBedLayout(Item):
     s.place(fridge, rel_to='FL', rotation='R', offset=[2,-1,1])
 
     # --- long side shelf ---
+    # use two shelfs instead of one long one for shorter pieces
     long_shelf_w = sl - gl - chair.getW()
-    s.place( ShelfUnit((long_shelf_w, shelf_depth, sh), count=3, desc="long side shelf"),
-            rel_to='BL', rotation='L', offset=[0,gl,0])
+    ls1_w = 36
+    ls2_w = long_shelf_w - ls1_w
+    ls1 = ShelfUnit8020((ls1_w, shelf_depth, sh), count=3, numSupports=1, railFactory=Rail1010, desc="left long side shelf")
+    ls2 = ShelfUnit8020((ls2_w, shelf_depth, sh), count=4, numSupports=2, railFactory=Rail1010, desc="right long side shelf")
+    s.place(ls1, rel_to='BL', rotation='L', offset=[0,gl,0])
+    s.place(ls2, rel_to='BL', rotation='L', offset=[0,gl+ls1_w,0])
 
     # --- table ---
     s.place(table, rel_to='FL', rotation=180, offset=[chair.getL()-table.getW()+2,0,0])
