@@ -4,22 +4,34 @@ from lib.item import Item
 from lib.rail8020 import Rail1515
 from lib.wood import Ply_1_2
 
-BED_TOP_HEIGHT = 7 # 1 inch ply + 6" mattress
+BED_TOP_HEIGHT = 6.5 # 0.5 inch ply + 6" mattress
+
+class Mattress(Item):
+  def __init__(self, w, l):
+    super().__init__([w,l,BED_TOP_HEIGHT-0.5])
+    self.color = (67, 170, 210)
+
+  def desc(s):
+    return "Foam Mattress {0}x{1}".format(s.getW(), s.get(H))
+
+  def render(s):
+    (w,l,h) = s.getDim()
+    return s.c(s.color, cube([w,l,h]))
 
 class BedTop(Item):
   def __init__(self, w, l):
     super().__init__([w,l,BED_TOP_HEIGHT])
-    self.color = (67, 170, 139)
   
   def render(s):
-    # TODO: build this from cushion + plywood componenets
     (w,l,h) = s.getDim()
 
     ply = Ply_1_2(w,l)
     s.place(ply)
 
-    mattress = translate([0.5,0.5,0.5])(cube([w-1,l-1,h-0.5]))
-    return s.c(s.color, mattress)
+    mattress = Mattress(w-1, l-1)
+    s.place(mattress, offset=[0.5,0.5,0.5])
+
+    return None
 
 class Bed8020(Item):
   def __init__(self, dim, mid_offset='M'):
