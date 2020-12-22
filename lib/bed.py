@@ -63,10 +63,10 @@ class Bed8020(Item):
 
     # leg rails
     leg = s.railFactory(fh - 2*1.5)
-    s.place(leg, rel_to='FL', rotation='YL', offset=[0,0,1.5])
-    s.place(leg, rel_to='BL', rotation='YL', offset=[0,0,1.5])
-    s.place(leg, rel_to='FR', rotation='YL', offset=[0,0,1.5])
-    s.place(leg, rel_to='BR', rotation='YL', offset=[0,0,1.5])
+    s.place(leg, rel_to='FL', rotation='V', offset=[0,0,1.5])
+    s.place(leg, rel_to='BL', rotation='V', offset=[0,0,1.5])
+    s.place(leg, rel_to='FR', rotation='V', offset=[0,0,1.5])
+    s.place(leg, rel_to='BR', rotation='V', offset=[0,0,1.5])
 
     # depth support pieces
     dep = s.railFactory(l - 2*1.5)
@@ -79,8 +79,8 @@ class Bed8020(Item):
 
     # add mid leg/support if specified
     if s.mid_offset:
-      s.place(leg, rel_to='FL', rotation='YL', offset=[s.mid_offset,0,1.5])
-      s.place(leg, rel_to='BL', rotation='YL', offset=[s.mid_offset,0,1.5])
+      s.place(leg, rel_to='FL', rotation='V', offset=[s.mid_offset,0,1.5])
+      s.place(leg, rel_to='BL', rotation='V', offset=[s.mid_offset,0,1.5])
       s.place(dep, rel_to='BL', rotation='L',  offset=[s.mid_offset,1.5,0])
       s.place(dep, rel_to='BL', rotation='L',  offset=[s.mid_offset,1.5,fh-1.5])
 

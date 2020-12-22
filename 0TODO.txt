@@ -1,2 +1,11 @@
 * Bed8020 should take a Rail factory
-* Wood shelf unit should be made up of ply 1/2 instead of direct cubes.
+* make shelfs in rear layout made of 8020 units.
+* wood shelfs should extend all the way to the ground (the side panels), no hanging shelfs
+* add prices to BOM?
+* Create README.md with how to generate, sample images, how to modify, etc (may need docs and images dirs)
+* add rest of electronics:
+  * solar charger
+  * battery charger from AC
+  * dc to ac invertor
+  * dc to dc converter
+  * dc panel

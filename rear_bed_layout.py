@@ -27,8 +27,8 @@ class RearBedLayout(Item):
 
   def render(self):
     # --- Config ---
-    # s = SilverEagle()
-    s = SilverStar()
+    s = SilverEagle()
+    # s = SilverStar()
     g_shelf_w = 48
     bed = Bed8020([s.getW(), 36, s.getH() - 38], mid_offset=g_shelf_w-1.5)
     fridge = FridgeIcecoVL35()
@@ -50,7 +50,7 @@ class RearBedLayout(Item):
 
     # --- bed ---
     s.place(bed)
-    s.place( ShelfUnit((bl, shelf_depth, 24), count=1),
+    s.place( ShelfUnit((bl, shelf_depth, 24), count=1, desc="above bed"),
             rotation='R', rel_to='TBR')
     gs = Shelf8020(g_shelf_w, bl, Rail1515)
     s.place(gs, offset=[0,0,14])
@@ -63,16 +63,16 @@ class RearBedLayout(Item):
     obs_w = elect_box_w
     obs_z = elect_box_h
     obs_h = sh - obs_z
-    s.place( ShelfUnit((obs_w,shelf_depth,obs_h), count=4),
+    s.place( ShelfUnit((obs_w,shelf_depth,obs_h), count=4, desc="over battery shelf"),
             rel_to='BR', rotation='R', offset=[0,gl,obs_z])
 
     # --- kitchen/cooking area ---
     kh = s.vnose_h
     kc = (216, 230, 92)
     k_off = gl + obs_w
-    s.place( ShelfUnit((kitchen_w, shelf_depth, kh), count=1, color=kc),
+    s.place( ShelfUnit((kitchen_w, shelf_depth, kh), count=1, color=kc, desc="kitchen unit"),
             rel_to='BR', rotation='R', offset=[0,k_off,0])
-    s.place( ShelfUnit((shelf_depth, 4, sh-kh), count=3, color=kc, with_back=True),
+    s.place( ShelfUnit((shelf_depth, 4, sh-kh), count=3, color=kc, with_back=True, desc="spice rack"),
             rel_to='BR', rotation=180, offset=[0,k_off,kh])
     stove_off = s.door_off + s.door_w + 1
     s.place(Stove(), rel_to='FR', rotation='R', offset=[-1,-stove_off,kh])
@@ -93,7 +93,7 @@ class RearBedLayout(Item):
 
     # --- long side shelf ---
     long_shelf_w = sl - gl - chair.getW()
-    s.place( ShelfUnit((long_shelf_w, shelf_depth, sh), count=3),
+    s.place( ShelfUnit((long_shelf_w, shelf_depth, sh), count=3, desc="long side shelf"),
             rel_to='BL', rotation='L', offset=[0,gl,0])
 
     # --- table ---

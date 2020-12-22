@@ -45,7 +45,7 @@ class SideBedLayout(Item):
     bed_z = sh - 38 - bh # 38" sitting clearance max bed Z
     s.place( bed, rel_to='BR', offset=[0,0,bed_z])
     bed_shelf_h = sh - bed_z - bh - 12
-    s.place( ShelfUnit((bw, shelf_depth, bed_shelf_h), count=1, desc="Above bed shelf"), rel_to='TBR')
+    s.place( ShelfUnit((bw, shelf_depth, bed_shelf_h), count=1, desc="Above bed"), rel_to='TBR')
 
     # --- solar ---
     solar_x_off = (sw - solar.getW()) / 2.0
@@ -53,17 +53,17 @@ class SideBedLayout(Item):
 
     # --- garage ---
     gc = (249, 199, 79) # garage color
-    s.place( ShelfUnit((bw, gl, bed_z), count=0, with_back=True, color=gc), rel_to='BR')
-    s.place( ShelfUnit((sw-bw, gl, bed_z), count=2, with_back=True, color=gc), rel_to='BL')
+    s.place( ShelfUnit((bw, gl, bed_z), count=0, with_back=True, color=gc, desc="right garage"), rel_to='BR')
+    s.place( ShelfUnit((sw-bw, gl, bed_z), count=2, with_back=True, color=gc, desc="left garage"), rel_to='BL')
 
     # --- kitchen/cooking area ---
     kw = sl - bl - s.door_w - s.door_off
     kh = s.vnose_h
     kc = (216, 230, 92)
     k_off = bl
-    s.place( ShelfUnit((kw, bw, kh), count=1, color=kc),
+    s.place( ShelfUnit((kw, bw, kh), count=1, color=kc, desc="kitchen unit"),
             rel_to='BR', rotation='R', offset=[0,k_off,0])
-    s.place( ShelfUnit((bw, 4, sh-kh), count=3, color=kc, with_back=True),
+    s.place( ShelfUnit((bw, 4, sh-kh), count=3, color=kc, with_back=True, desc="spice rack"),
             rel_to='BR', rotation=180, offset=[0,k_off,kh])
     stove_off = s.door_off + s.door_w
     s.place(Stove(), rel_to='FR', rotation='R', offset=[-5,-stove_off-5,kh])
@@ -84,7 +84,7 @@ class SideBedLayout(Item):
 
     # --- long side shelf ---
     long_shelf_w = sl - gl - chair.getW()
-    s.place( ShelfUnit((long_shelf_w, shelf_depth, sh), count=3),
+    s.place( ShelfUnit((long_shelf_w, shelf_depth, sh), count=3, desc="long side shelf"),
             rel_to='BL', rotation='L', offset=[0,gl,0])
 
     # --- table ---
@@ -98,9 +98,9 @@ class SideBedLayout(Item):
     ssh = sh - bed_z # height of small shelfs in back
     s_opt_c = (135, 65, 68, 128)
     s_opt_w = sw - bw - shelf_depth
-    s.place( ShelfUnit((gl, shelf_depth, ssh), count=3),
+    s.place( ShelfUnit((gl, shelf_depth, ssh), count=3, desc="sideway back shelf"),
             rel_to='BL', rotation='L', offset=[0,0,bed_z])
-    s.place( ShelfUnit((s_opt_w, shelf_depth, ssh), count=3, color=s_opt_c),
+    s.place( ShelfUnit((s_opt_w, shelf_depth, ssh), count=3, color=s_opt_c, desc="opt back shelf"),
             rel_to='BL', offset=[shelf_depth,0,bed_z])
 
     self.place(s)

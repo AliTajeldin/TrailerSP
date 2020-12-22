@@ -3,31 +3,40 @@ from solid import *
 from solid.utils import *  # Not required, but the utils module is useful
 from lib.item import Item
 from lib.rail8020 import Rail1515
-from lib.wood import Panel_1_8
+from lib.wood import Panel_1_8, Ply_1_2
 
 class ShelfUnit(Item):
-  def __init__(self, dim, count=3, with_back=False, color=(144, 190, 109), desc=""):
+  def __init__(self, dim, count=3, with_back=False, color=(144, 190, 109), woodFactory=Ply_1_2, desc=""):
     super().__init__(dim)
     self.color = color
     self.count = count
     self.with_back = with_back
+    self.woodFactory = woodFactory
     self.user_desc = desc
 
   def desc(s):
-    u = s.user_desc + ": " if s.user_desc else "Wood Shelf Unit: "
-    return u + s.dimStr3D()
+    u = ", " + s.user_desc  if s.user_desc else ""
+    return "Wood Shelf Unit{0}: {1}".format(u, s.dimStr3D())
 
   def render(s):
     (w,l,h) = s.getDim()
-    sep = (h-1.0) / (s.count+1)
-    u = union()
-    for i in range(s.count+2):
-      u = u.add(up(i*sep)(cube([w,l,1])))
-    v_shelf = cube([1,l,h])
-    u.add([v_shelf, translate([w-1,0,0])(v_shelf)])
+    sz = s.woodFactory.SIZE
+
     if s.with_back:
-      u.add(translate([0,l-1,0])(cube([w,1,h])))
-    return s.c(s.color, u)
+      l = l - sz # make room for the back vertical cover
+      b = s.woodFactory(h,w, color=s.color)
+      s.place(b, rel_to='FL', rotation='VR')
+      # u.add(translate([0,l-1,0])(cube([w,1,h])))
+
+    sep = (h-sz) / (s.count+1.0)
+    shelf = s.woodFactory(w-2*sz,l, color=s.color)
+    for i in range(s.count+2):
+      s.place(shelf, offset=[sz,0,i*sep])
+
+    v_shelf = s.woodFactory(h,l, color=s.color)
+    s.place(v_shelf, rotation='V')
+    s.place(v_shelf, rotation='V', rel_to='BR')
+    return None
 
 class Shelf8020(Item):
   """single shelf (not unit). assumes 8020 frame is already there"""
@@ -70,8 +79,8 @@ class ShelfUnit8020(Item):
     self.user_desc = desc
 
   def desc(s):
-    u = s.user_desc + ": " if s.user_desc else "8020 Shelf Unit: "
-    return u + s.dimStr3D()
+    u = ", " + s.user_desc  if s.user_desc else ""
+    return "{0} Shelf Unit{1}: {2}".format(s.railFactory.__name__, u, s.dimStr3D())
 
   def render(s):
     (w,l,h) = s.getDim()
@@ -79,10 +88,10 @@ class ShelfUnit8020(Item):
 
     # vertical rails
     vrail = s.railFactory(h - 2*sz)
-    s.place(vrail, rel_to='FL', rotation='YL', offset=[0,0,sz])
-    s.place(vrail, rel_to='BL', rotation='YL', offset=[0,0,sz])
-    s.place(vrail, rel_to='FR', rotation='YL', offset=[0,0,sz])
-    s.place(vrail, rel_to='BR', rotation='YL', offset=[0,0,sz])
+    s.place(vrail, rel_to='FL', rotation='V', offset=[0,0,sz])
+    s.place(vrail, rel_to='BL', rotation='V', offset=[0,0,sz])
+    s.place(vrail, rel_to='FR', rotation='V', offset=[0,0,sz])
+    s.place(vrail, rel_to='BR', rotation='V', offset=[0,0,sz])
 
     # horizontal rails along width
     rw = s.railFactory(w)
