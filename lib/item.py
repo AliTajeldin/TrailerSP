@@ -30,7 +30,7 @@ class BillOfMaterial(object):
 class Item(ABC):
   """base class of all items that need to be placed in the trailer"""
   def __init__(self, dim):
-    self.dim = dim
+    self.dim = [int(d) if int(d)==float(d) else d for d in dim]
     self.r_children = [] # rendered children
     self._render_cache = 'not-rendered' # can't use None as marker as it is a valid render result
     self.bom = BillOfMaterial(self)

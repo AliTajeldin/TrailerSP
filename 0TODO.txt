@@ -1,3 +1,2 @@
-* make layouts a proper class themselves.
 * Bed8020 should take a Rail factory
 * Wood shelf unit should be made up of ply 1/2 instead of direct cubes.
