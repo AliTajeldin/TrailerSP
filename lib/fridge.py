@@ -22,11 +22,21 @@ class FridgeIcecoVL35(FridgeBase):
   def __init__(self):
       super().__init__([27.2,15.2,15])
 
+  def desc(s):
+    return "Iceco VL35 Fridge"
+
 class FridgeIcecoGO20(FridgeBase):
   def __init__(self):
       super().__init__([22.4,12.6,12.4])
+
+  def desc(s):
+    return "Iceco FO20 Fridge"
 
 class FridgeAlpicoolT60(FridgeBase):
   """huge with freeze+fridge"""
   def __init__(self):
       super().__init__([28.5,14.2,21.6])
+
+  def desc(s):
+    return "Alpicoo T60 Fridge"
+

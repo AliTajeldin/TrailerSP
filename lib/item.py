@@ -59,9 +59,17 @@ class Item(ABC):
     """apply rotation to given item"""
     return rotate(a)(item)
 
+  def dimStr3D(s):
+    (w,l,h) = s.getDim()
+    return "{0}x{1}x{2}".format(w,l,h)
+
+  def dimStr2D(s):
+    (w,l,h) = s.getDim()
+    return "{0}x{1}".format(w,l)
+
   def desc(s):
     """one line description of what this item is"""
-    return type(s).__name__ + ': ' + str(s.getDim())
+    return type(s).__name__ + ': ' + s.dimStr3D()
 
   @abstractmethod
   def render(s):

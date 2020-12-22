@@ -31,3 +31,6 @@ class Battery(Item):
 class Battleborn100ah(Battery):
   def __init__(self):
     super().__init__([12.8,6.9,9])
+
+  def desc(s):
+    return "Battleborn 100AH Battery"

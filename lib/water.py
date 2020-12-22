@@ -20,6 +20,13 @@ class Water5L(Water):
   def __init__(self):
     super().__init__([13.75,6.75,18])
 
+  def desc(s):
+    return "5L Water Jug"
+
 class Water6L(Water):
   def __init__(self):
     super().__init__([14,8,21])
+
+  def desc(s):
+    return "6L Water Jug"
+

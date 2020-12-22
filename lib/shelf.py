@@ -6,12 +6,17 @@ from lib.rail8020 import Rail1515
 from lib.wood import Panel_1_8
 
 class ShelfUnit(Item):
-  def __init__(self, dim, count=3, with_back=False, color=(144, 190, 109)):
+  def __init__(self, dim, count=3, with_back=False, color=(144, 190, 109), desc=""):
     super().__init__(dim)
     self.color = color
     self.count = count
     self.with_back = with_back
-  
+    self.user_desc = desc
+
+  def desc(s):
+    u = s.user_desc + ": " if s.user_desc else "Wood Shelf Unit: "
+    return u + s.dimStr3D()
+
   def render(s):
     (w,l,h) = s.getDim()
     sep = (h-1.0) / (s.count+1)
@@ -31,6 +36,9 @@ class Shelf8020(Item):
     self.railFactory = railFactory
     self.woodFactory = woodFactory
     self.numSupports = numSupports
+
+  def desc(s):
+    return "Shelf of {0}: {1}".format(s.railFactory.__name__, s.dimStr2D())
 
   def render(s):
     (w,l,h) = s.getDim()
@@ -53,12 +61,17 @@ class Shelf8020(Item):
 
 class ShelfUnit8020(Item):
   def __init__(self, dim, count=3, railFactory=Rail1515,
-               woodFactory=Panel_1_8, numSupports=1):
+               woodFactory=Panel_1_8, numSupports=1, desc=""):
     super().__init__(dim)
     self.count = count
     self.railFactory = railFactory
     self.woodFactory = woodFactory
     self.numSupports = numSupports
+    self.user_desc = desc
+
+  def desc(s):
+    u = s.user_desc + ": " if s.user_desc else "8020 Shelf Unit: "
+    return u + s.dimStr3D()
 
   def render(s):
     (w,l,h) = s.getDim()

@@ -26,6 +26,12 @@ class SolarRenegy300w(SolarBase):
   def __init__(self):
     super().__init__(40, 65, 3)
 
+  def desc(s):
+    return "Renegy Solar Panel 300W"
+
 class SolarRenegy200w(SolarBase):
   def __init__(self):
     super().__init__(26, 64, 4)
+
+  def desc(s):
+    return "Renegy Solar Panel 200W"

@@ -12,7 +12,7 @@ class Mattress(Item):
     self.color = (67, 170, 210)
 
   def desc(s):
-    return "Foam Mattress {0}x{1}".format(s.getW(), s.get(H))
+    return "Foam Mattress: " + s.dimStr2D()
 
   def render(s):
     (w,l,h) = s.getDim()
@@ -21,7 +21,10 @@ class Mattress(Item):
 class BedTop(Item):
   def __init__(self, w, l):
     super().__init__([w,l,BED_TOP_HEIGHT])
-  
+
+  def desc(s):
+    return "Bed Top: " + s.dimStr2D()
+
   def render(s):
     (w,l,h) = s.getDim()
 
@@ -34,10 +37,14 @@ class BedTop(Item):
     return None
 
 class Bed8020(Item):
-  def __init__(self, dim, mid_offset='M'):
+  def __init__(self, dim, mid_offset='M', railFactory=Rail1515):
     super().__init__(dim)
     self.color = (67, 170, 139)
+    self.railFactory = railFactory
     self.mid_offset = dim[0]/2 if mid_offset=='M' else mid_offset
+
+  def desc(s):
+    return "Frame Bed of {0}: {1}".format(s.railFactory.__name__, s.dimStr3D())
 
   def render(s):
     (w,l,h) = s.dim
@@ -48,21 +55,21 @@ class Bed8020(Item):
     s.place(bt, rel_to='TBL')
 
     # horizontal rails along width
-    rw = Rail1515(w)
+    rw = s.railFactory(w)
     s.place(rw, rel_to='FL')
     s.place(rw, rel_to='BL')
     s.place(rw, rel_to='FL', offset=[0,0,fh-1.5])
     s.place(rw, rel_to='BL', offset=[0,0,fh-1.5])
 
     # leg rails
-    leg = Rail1515(fh - 2*1.5)
+    leg = s.railFactory(fh - 2*1.5)
     s.place(leg, rel_to='FL', rotation='YL', offset=[0,0,1.5])
     s.place(leg, rel_to='BL', rotation='YL', offset=[0,0,1.5])
     s.place(leg, rel_to='FR', rotation='YL', offset=[0,0,1.5])
     s.place(leg, rel_to='BR', rotation='YL', offset=[0,0,1.5])
 
     # depth support pieces
-    dep = Rail1515(l - 2*1.5)
+    dep = s.railFactory(l - 2*1.5)
     s.place(dep, rel_to='BL', rotation='L', offset=[0,1.5,0])
     s.place(dep, rel_to='BL', rotation='L', offset=[0,1.5,fh-1.5])
     s.place(dep, rel_to='BR', rotation='L', offset=[0,1.5,0])

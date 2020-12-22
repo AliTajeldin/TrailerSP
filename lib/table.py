@@ -15,3 +15,6 @@ class LagunTable(Item):
     t = up(h-1)(cube([w,l,1])) + \
       translate([1,1,0])(cylinder(r=1, h=h))
     return s.c(s.color, t)
+
+  def desc(s):
+    return "Lagun Table: " + s.dimStr2D()

@@ -59,6 +59,12 @@ class SilverEagle(ShellBase):
   def __init__(self):
     super().__init__([6 * 12, 12 * 12, 6.25 * 12])
 
+  def desc(s):
+    return "Weeroll Silver Eagle 6' x 12' x 6'3\""
+
 class SilverStar(ShellBase):
   def __init__(self):
-    super().__init__([79, 12 * 14, 7 * 12])
+    super().__init__([79, 12 * 14, 6.25 * 12])
+
+  def desc(s):
+    return "Weeroll Silver Star 6'7\" x 14' x 6'3\""

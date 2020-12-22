@@ -21,3 +21,6 @@ class DryFlushToilet(Toilet):
   def __init__(self):
     super().__init__([16,20,18])
 
+  def desc(s):
+    return "Dry Flush Toilet " + s.dimStr3D()
+
