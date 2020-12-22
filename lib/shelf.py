@@ -50,3 +50,45 @@ class Shelf8020(Item):
       s.place(sheet, offset=[sz,0,sz])
 
     return None
+
+class ShelfUnit8020(Item):
+  def __init__(self, dim, count=3, railFactory=Rail1515,
+               woodFactory=Panel_1_8, numSupports=1):
+    super().__init__(dim)
+    self.count = count
+    self.railFactory = railFactory
+    self.woodFactory = woodFactory
+    self.numSupports = numSupports
+
+  def render(s):
+    (w,l,h) = s.getDim()
+    sz = s.railFactory.SIZE
+
+    # vertical rails
+    vrail = s.railFactory(h - 2*sz)
+    s.place(vrail, rel_to='FL', rotation='YL', offset=[0,0,sz])
+    s.place(vrail, rel_to='BL', rotation='YL', offset=[0,0,sz])
+    s.place(vrail, rel_to='FR', rotation='YL', offset=[0,0,sz])
+    s.place(vrail, rel_to='BR', rotation='YL', offset=[0,0,sz])
+
+    # horizontal rails along width
+    rw = s.railFactory(w)
+    s.place(rw, rel_to='FL')
+    s.place(rw, rel_to='BL')
+    s.place(rw, rel_to='TFL')
+    s.place(rw, rel_to='TBL')
+
+    # horizontal rails along depth
+    rd = s.railFactory(l - 2*sz)
+    s.place(rd, rel_to='BL', rotation='L', offset=[0,sz,0])
+    s.place(rd, rel_to='BR', rotation='L', offset=[0,sz,0])
+    s.place(rd, rel_to='TBL', rotation='L', offset=[0,sz,0])
+    s.place(rd, rel_to='TBR', rotation='L', offset=[0,sz,0])
+
+    # shelves
+    vsep = (h-sz) / (s.count+1)
+    for i in range(s.count):
+      shelf = Shelf8020(w,l, railFactory=s.railFactory, woodFactory=s.woodFactory, numSupports=s.numSupports)
+      s.place(shelf, offset=[0,0,(i+1)*vsep])
+
+    return None
