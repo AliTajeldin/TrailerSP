@@ -26,7 +26,6 @@ class ShelfUnit(Item):
       l = l - sz # make room for the back vertical cover
       b = s.woodFactory(h,w, color=s.color)
       s.place(b, rel_to='FL', rotation='VR')
-      # u.add(translate([0,l-1,0])(cube([w,1,h])))
 
     sep = (h-sz) / (s.count+1.0)
     shelf = s.woodFactory(w-2*sz,l, color=s.color)

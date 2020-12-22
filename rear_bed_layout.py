@@ -14,7 +14,7 @@ from lib.toilet import DryFlushToilet
 from lib.stove import Stove
 from lib.chair import Chair
 from lib.table import LagunTable
-from lib.rail8020 import Rail1515
+from lib.rail8020 import Rail1515, Rail1010, Rail2020
 from lib.shelf import Shelf8020
 from lib.wood import Ply_1_2, Panel_1_8
 
@@ -30,7 +30,7 @@ class RearBedLayout(Item):
     s = SilverEagle()
     # s = SilverStar()
     g_shelf_w = 48
-    bed = Bed8020([s.getW(), 36, s.getH() - 38], mid_offset=g_shelf_w-1.5)
+    bed = Bed8020([s.getW(), 36, s.getH() - 38], mid_offset=g_shelf_w-1.5, railFactory=Rail1515)
     fridge = FridgeIcecoVL35()
     solar = SolarRenegy200w()
     toilet = DryFlushToilet()
