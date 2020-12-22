@@ -3,19 +3,18 @@ from solid.utils import *  # Not required, but the utils module is useful
 import math as M
 
 from lib.item import Item
-from lib.bed import BedTop, Bed8020
+from lib.bed import BedTop
 from lib.shell import SilverEagle, SilverStar
 from lib.solar import SolarRenegy200w, SolarRenegy300w
 from lib.fridge import FridgeIcecoGO20, FridgeIcecoVL35, FridgeAlpicoolT60
 from lib.water import Water5L, Water6L
-from lib.shelf import ShelfUnit
+from lib.shelf import ShelfUnit, ShelfUnit8020, Shelf8020
 from lib.battery import Battleborn100ah
 from lib.toilet import DryFlushToilet
 from lib.stove import Stove
 from lib.chair import Chair
 from lib.table import LagunTable
 from lib.rail8020 import Rail1515, Rail1010, Rail2020
-from lib.shelf import Shelf8020
 from lib.wood import Ply_1_2, Panel_1_8
 
 class RearBedLayout(Item):
@@ -29,8 +28,7 @@ class RearBedLayout(Item):
     # --- Config ---
     s = SilverEagle()
     # s = SilverStar()
-    g_shelf_w = 48
-    bed = Bed8020([s.getW(), 36, s.getH() - 38], mid_offset=g_shelf_w-1.5, railFactory=Rail1515)
+    bed = BedTop(s.getW(), 36)
     fridge = FridgeIcecoVL35()
     solar = SolarRenegy200w()
     toilet = DryFlushToilet()
@@ -49,11 +47,17 @@ class RearBedLayout(Item):
     elect_box_w = sl - s.door_off - s.door_w - kitchen_w - gl
 
     # --- bed ---
-    s.place(bed)
+    bed_z = sh - bh - 38
+    s.place(bed, offset=[0,0,bed_z])
     s.place( ShelfUnit((bl, shelf_depth, 24), count=1, desc="above bed"),
             rotation='R', rel_to='TBR')
-    gs = Shelf8020(g_shelf_w, bl, Rail1515)
-    s.place(gs, offset=[0,0,14])
+
+    # --- garage ---
+    g_shelf_off = 48
+    gs1 = ShelfUnit8020([g_shelf_off,bl,bed_z], count=2, desc="left garage")
+    gs2 = ShelfUnit8020([sw-g_shelf_off,bl,bed_z], count=1, numSupports=0, desc="right garage")
+    s.place(gs1)
+    s.place(gs2, rel_to='BR')
 
     # --- solar ---
     solar_x_off = (sw - solar.getW()) / 2.0

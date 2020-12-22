@@ -46,7 +46,7 @@ class Shelf8020(Item):
     self.numSupports = numSupports
 
   def desc(s):
-    return "Shelf of {0}: {1}".format(s.railFactory.__name__, s.dimStr2D())
+    return "{0} Shelf(s): {1}".format(s.railFactory.__name__, s.dimStr2D())
 
   def render(s):
     (w,l,h) = s.getDim()

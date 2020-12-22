@@ -3,7 +3,7 @@ from solid.utils import *  # Not required, but the utils module is useful
 import math as M
 
 from lib.item import Item
-from lib.bed import BedTop, Bed8020
+from lib.bed import BedTop
 from lib.shell import SilverEagle, SilverStar
 from lib.solar import SolarRenegy200w, SolarRenegy300w
 from lib.fridge import FridgeIcecoGO20, FridgeIcecoVL35, FridgeAlpicoolT60
