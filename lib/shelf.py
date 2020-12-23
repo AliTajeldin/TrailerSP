@@ -69,13 +69,14 @@ class Shelf8020(Item):
 
 class ShelfUnit8020(Item):
   def __init__(self, dim, count=3, railFactory=Rail1515,
-               woodFactory=Panel_1_8, numSupports=1, desc=""):
+               woodFactory=Panel_1_8, skip=0, numSupports=1, desc=""):
     super().__init__(dim)
     self.count = count
     self.railFactory = railFactory
     self.woodFactory = woodFactory
     self.numSupports = numSupports
     self.user_desc = desc
+    self.skip = skip
 
   def desc(s):
     u = ", " + s.user_desc  if s.user_desc else ""
@@ -108,7 +109,7 @@ class ShelfUnit8020(Item):
 
     # shelves
     vsep = (h-sz) / (s.count+1)
-    for i in range(s.count):
+    for i in range(s.skip, s.count):
       shelf = Shelf8020(w,l, railFactory=s.railFactory, woodFactory=s.woodFactory, numSupports=s.numSupports)
       s.place(shelf, offset=[0,0,(i+1)*vsep])
 

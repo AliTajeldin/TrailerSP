@@ -26,8 +26,8 @@ class RearBedLayout(Item):
 
   def render(self):
     # --- Config ---
-    s = SilverEagle()
-    # s = SilverStar()
+    # s = SilverEagle()
+    s = SilverStar()
     bed = BedTop(s.getW(), 36)
     fridge = FridgeIcecoVL35()
     solar = SolarRenegy200w()
@@ -63,17 +63,15 @@ class RearBedLayout(Item):
     solar_x_off = (sw - solar.getW()) / 2.0
     s.place(solar, offset=[solar_x_off,0,sh])
 
-    # --- obs: over battery shelf ---
-    obs_w = elect_box_w
-    obs_z = elect_box_h
-    obs_h = sh - obs_z
-    s.place( ShelfUnit((obs_w,shelf_depth,obs_h), count=4, desc="over battery shelf"),
-            rel_to='BR', rotation='R', offset=[0,gl,obs_z])
+    # --- right side shelf (between kitchen and bed) ---
+    mrs_w = elect_box_w
+    mrs = ShelfUnit8020((mrs_w,shelf_depth,sh), count=6, skip=1, railFactory=Rail1010, desc="mid right shelf")
+    s.place(mrs, rel_to='BR', rotation='R', offset=[0,gl,0])
 
     # --- kitchen/cooking area ---
     kh = s.vnose_h
     kc = (216, 230, 92)
-    k_off = gl + obs_w
+    k_off = gl + mrs_w
     s.place( ShelfUnit((kitchen_w, shelf_depth, kh), count=1, color=kc, desc="kitchen unit"),
             rel_to='BR', rotation='R', offset=[0,k_off,0])
     s.place( ShelfUnit((shelf_depth, 4, sh-kh), count=3, color=kc, with_back=True, desc="spice rack"),
@@ -82,7 +80,7 @@ class RearBedLayout(Item):
     s.place(Stove(), rel_to='FR', rotation='R', offset=[-1,-stove_off,kh])
 
     # --- toilet ---
-    s.place(toilet, rel_to='BR', offset=[0,gl,0])
+    s.place(toilet, rel_to='BR', offset=[-2,gl+2,0])
 
     # --- elect cabinet (bat + chargers) ---
     bat_y_off = gl + 2
@@ -100,8 +98,8 @@ class RearBedLayout(Item):
     long_shelf_w = sl - gl - chair.getW()
     ls1_w = 36
     ls2_w = long_shelf_w - ls1_w
-    ls1 = ShelfUnit8020((ls1_w, shelf_depth, sh), count=3, numSupports=1, railFactory=Rail1010, desc="left long side shelf")
-    ls2 = ShelfUnit8020((ls2_w, shelf_depth, sh), count=4, numSupports=2, railFactory=Rail1010, desc="right long side shelf")
+    ls1 = ShelfUnit8020((ls1_w, shelf_depth, sh), count=6, numSupports=1, skip=1, railFactory=Rail1010, desc="left long side shelf")
+    ls2 = ShelfUnit8020((ls2_w, shelf_depth, sh), count=4, numSupports=2, skip=0, railFactory=Rail1010, desc="right long side shelf")
     s.place(ls1, rel_to='BL', rotation='L', offset=[0,gl,0])
     s.place(ls2, rel_to='BL', rotation='L', offset=[0,gl+ls1_w,0])
 
