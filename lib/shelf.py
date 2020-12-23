@@ -68,12 +68,15 @@ class Shelf8020(Item):
     return None
 
 class ShelfUnit8020(Item):
-  def __init__(self, dim, count=3, railFactory=Rail1515,
-               woodFactory=Panel_1_8, skip=0, numSupports=1, desc=""):
+  def __init__(self, dim, count=3, railFactory=Rail1515, woodFactory=Panel_1_8,
+               has_bottom_shelf=False, has_top_shelf=False,
+               skip=0, numSupports=1, desc=""):
     super().__init__(dim)
     self.count = count
     self.railFactory = railFactory
     self.woodFactory = woodFactory
+    self.has_bottom_shelf = has_bottom_shelf
+    self.has_top_shelf = has_top_shelf
     self.numSupports = numSupports
     self.user_desc = desc
     self.skip = skip
@@ -109,8 +112,12 @@ class ShelfUnit8020(Item):
 
     # shelves
     vsep = (h-sz) / (s.count+1)
+    shelf = Shelf8020(w,l, railFactory=s.railFactory, woodFactory=s.woodFactory, numSupports=s.numSupports)
     for i in range(s.skip, s.count):
-      shelf = Shelf8020(w,l, railFactory=s.railFactory, woodFactory=s.woodFactory, numSupports=s.numSupports)
       s.place(shelf, offset=[0,0,(i+1)*vsep])
+
+    if s.has_bottom_shelf:
+      bsw = s.woodFactory(w-2*sz, l)
+      s.place(bsw, offset=[sz,0,sz])
 
     return None

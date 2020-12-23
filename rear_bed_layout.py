@@ -49,8 +49,8 @@ class RearBedLayout(Item):
     # --- bed ---
     bed_z = sh - bh - 38
     s.place(bed, offset=[0,0,bed_z])
-    s.place( ShelfUnit((bl, shelf_depth, 24), count=1, desc="above bed"),
-            rotation='R', rel_to='TBR')
+    bed_shelf = ShelfUnit8020((bl, shelf_depth, 24), count=1, has_bottom_shelf=True, desc="above bed")
+    s.place(bed_shelf, rotation='R', rel_to='TBR')
 
     # --- garage ---
     g_shelf_off = 48
