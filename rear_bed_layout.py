@@ -12,7 +12,7 @@ from lib.shelf import ShelfUnit, ShelfUnit8020, Shelf8020
 from lib.battery import Battleborn100ah
 from lib.toilet import DryFlushToilet
 from lib.stove import Stove
-from lib.chair import Chair
+from lib.chair import Chair8020
 from lib.table import LagunTable
 from lib.rail8020 import Rail1515, Rail1010, Rail2020
 from lib.wood import Ply_1_2, Ply_1, Panel_1_8
@@ -34,7 +34,7 @@ class RearBedLayout(Item):
     toilet = DryFlushToilet()
     bat = Battleborn100ah()
     water = Water6L()
-    chair = Chair()
+    chair = Chair8020()
     table = LagunTable([12,24,33])
     kitchen_w = 2.5 * 12
     shelf_depth = 20 # depth of side shelfs
@@ -73,7 +73,7 @@ class RearBedLayout(Item):
     kus = ShelfUnit8020((kitchen_w, shelf_depth, kh), count=2, has_top_shelf=True, desc="kitchen unit")
     s.place(kus, rel_to='BR', rotation='R', offset=[0,k_off,0])
 
-    spice_rack = ShelfUnit((shelf_depth, 4, sh-kh), count=3, color=kc, with_back=True, desc="spice rack")
+    spice_rack = ShelfUnit((shelf_depth, 4, sh-kh), count=3, with_back=True, desc="spice rack")
     s.place(spice_rack, rel_to='BR', rotation=180, offset=[0,k_off,kh])
 
     stove_off = s.door_off + s.door_w + 1
@@ -91,7 +91,7 @@ class RearBedLayout(Item):
     s.place(chair, rel_to='FL', rotation='R')
 
     # --- fridge ---
-    s.place(fridge, rel_to='FL', rotation='R', offset=[2,-1,1])
+    s.place(fridge, rel_to='FL', rotation='R', offset=[2,-2,1.5])
 
     # --- long side shelf ---
     # use two shelfs instead of one long one for shorter pieces
