@@ -2,7 +2,7 @@
 from solid import *
 from solid.utils import *  # Not required, but the utils module is useful
 from lib.item import Item
-from lib.rail8020 import Rail1515
+from lib.rail8020 import Rail1010
 from lib.wood import Panel_1_8, Ply_1_2
 
 class ShelfUnit(Item):
@@ -39,7 +39,7 @@ class ShelfUnit(Item):
 
 class Shelf8020(Item):
   """single shelf (not unit). assumes 8020 frame is already there"""
-  def __init__(self, w, l, railFactory=Rail1515, woodFactory=Panel_1_8, numSupports=1):
+  def __init__(self, w, l, railFactory=Rail1010, woodFactory=Panel_1_8, numSupports=1):
     super().__init__([w, l, railFactory.SIZE])
     self.railFactory = railFactory
     self.woodFactory = woodFactory
@@ -68,7 +68,7 @@ class Shelf8020(Item):
     return None
 
 class ShelfUnit8020(Item):
-  def __init__(self, dim, count=3, railFactory=Rail1515, woodFactory=Panel_1_8,
+  def __init__(self, dim, count=3, railFactory=Rail1010, woodFactory=Panel_1_8,
                has_bottom_shelf=False, has_top_shelf=False,
                skip=0, numSupports=1, desc=""):
     super().__init__(dim)
@@ -89,6 +89,10 @@ class ShelfUnit8020(Item):
     (w,l,h) = s.getDim()
     sz = s.railFactory.SIZE
 
+    if s.has_top_shelf:
+      s.place(s.woodFactory(w,l), rel_to='TBL')
+      h -= s.woodFactory.SIZE
+
     # vertical rails
     vrail = s.railFactory(h - 2*sz)
     s.place(vrail, rel_to='FL', rotation='V', offset=[0,0,sz])
@@ -100,15 +104,15 @@ class ShelfUnit8020(Item):
     rw = s.railFactory(w)
     s.place(rw, rel_to='FL')
     s.place(rw, rel_to='BL')
-    s.place(rw, rel_to='TFL')
-    s.place(rw, rel_to='TBL')
+    s.place(rw, rel_to='FL', offset=[0,0,h-sz])
+    s.place(rw, rel_to='BL', offset=[0,0,h-sz])
 
     # horizontal rails along depth
     rd = s.railFactory(l - 2*sz)
     s.place(rd, rel_to='BL', rotation='L', offset=[0,sz,0])
     s.place(rd, rel_to='BR', rotation='L', offset=[0,sz,0])
-    s.place(rd, rel_to='TBL', rotation='L', offset=[0,sz,0])
-    s.place(rd, rel_to='TBR', rotation='L', offset=[0,sz,0])
+    s.place(rd, rel_to='BL', rotation='L', offset=[0,sz,h-sz])
+    s.place(rd, rel_to='BR', rotation='L', offset=[0,sz,h-sz])
 
     # shelves
     vsep = (h-sz) / (s.count+1)

@@ -15,7 +15,7 @@ from lib.stove import Stove
 from lib.chair import Chair
 from lib.table import LagunTable
 from lib.rail8020 import Rail1515, Rail1010, Rail2020
-from lib.wood import Ply_1_2, Panel_1_8
+from lib.wood import Ply_1_2, Ply_1, Panel_1_8
 
 class RearBedLayout(Item):
   def __init__(self):
@@ -43,8 +43,6 @@ class RearBedLayout(Item):
     (sw,sl,sh) = s.getDim()
     (bw,bl,bh) = bed.getDim()
     gl = bl # set garage depth same as bed
-    elect_box_h = toilet.getH() + 2
-    elect_box_w = sl - s.door_off - s.door_w - kitchen_w - gl
 
     # --- bed ---
     bed_z = sh - bh - 38
@@ -54,8 +52,8 @@ class RearBedLayout(Item):
 
     # --- garage ---
     g_shelf_off = 48
-    gs1 = ShelfUnit8020([g_shelf_off,bl,bed_z], count=2, desc="left garage")
-    gs2 = ShelfUnit8020([sw-g_shelf_off,bl,bed_z], count=1, numSupports=0, desc="right garage")
+    gs1 = ShelfUnit8020([g_shelf_off,bl,bed_z], count=2, railFactory=Rail1515, desc="left garage")
+    gs2 = ShelfUnit8020([sw-g_shelf_off,bl,bed_z], count=1, railFactory=Rail1515, numSupports=0, desc="right garage")
     s.place(gs1)
     s.place(gs2, rel_to='BR')
 
@@ -64,18 +62,20 @@ class RearBedLayout(Item):
     s.place(solar, offset=[solar_x_off,0,sh])
 
     # --- right side shelf (between kitchen and bed) ---
-    mrs_w = elect_box_w
-    mrs = ShelfUnit8020((mrs_w,shelf_depth,sh), count=6, skip=1, railFactory=Rail1010, desc="mid right shelf")
+    right_shelf_w = sl - s.door_off - s.door_w - kitchen_w - gl
+    mrs = ShelfUnit8020((right_shelf_w,shelf_depth,sh), count=6, skip=1, desc="mid right shelf")
     s.place(mrs, rel_to='BR', rotation='R', offset=[0,gl,0])
 
     # --- kitchen/cooking area ---
     kh = s.vnose_h
     kc = (216, 230, 92)
-    k_off = gl + mrs_w
-    s.place( ShelfUnit((kitchen_w, shelf_depth, kh), count=1, color=kc, desc="kitchen unit"),
-            rel_to='BR', rotation='R', offset=[0,k_off,0])
-    s.place( ShelfUnit((shelf_depth, 4, sh-kh), count=3, color=kc, with_back=True, desc="spice rack"),
-            rel_to='BR', rotation=180, offset=[0,k_off,kh])
+    k_off = gl + right_shelf_w
+    kus = ShelfUnit8020((kitchen_w, shelf_depth, kh), count=2, has_top_shelf=True, desc="kitchen unit")
+    s.place(kus, rel_to='BR', rotation='R', offset=[0,k_off,0])
+
+    spice_rack = ShelfUnit((shelf_depth, 4, sh-kh), count=3, color=kc, with_back=True, desc="spice rack")
+    s.place(spice_rack, rel_to='BR', rotation=180, offset=[0,k_off,kh])
+
     stove_off = s.door_off + s.door_w + 1
     s.place(Stove(), rel_to='FR', rotation='R', offset=[-1,-stove_off,kh])
 
@@ -98,8 +98,8 @@ class RearBedLayout(Item):
     long_shelf_w = sl - gl - chair.getW()
     ls1_w = 36
     ls2_w = long_shelf_w - ls1_w
-    ls1 = ShelfUnit8020((ls1_w, shelf_depth, sh), count=6, numSupports=1, skip=1, railFactory=Rail1010, desc="left long side shelf")
-    ls2 = ShelfUnit8020((ls2_w, shelf_depth, sh), count=4, numSupports=2, skip=0, railFactory=Rail1010, desc="right long side shelf")
+    ls1 = ShelfUnit8020((ls1_w, shelf_depth, sh), count=6, numSupports=1, skip=1, desc="left long side shelf")
+    ls2 = ShelfUnit8020((ls2_w, shelf_depth, sh), count=4, numSupports=2, skip=0, desc="right long side shelf")
     s.place(ls1, rel_to='BL', rotation='L', offset=[0,gl,0])
     s.place(ls2, rel_to='BL', rotation='L', offset=[0,gl+ls1_w,0])
 
@@ -109,6 +109,13 @@ class RearBedLayout(Item):
     # --- water ---
     s.place(water, rel_to='FL', offset=[sw/4.0,s.vnose_l,0], rotation=180)
     s.place(water, rel_to='FR', offset=[-sw/4.0,s.vnose_l,0])
+
+    # --- cross braces to stabalize the shelves ---
+    xb = Rail1010(sw - 2 * shelf_depth, color=(0,0,0))
+    s.place(xb, rel_to='TBL', offset=[shelf_depth,gl,0])
+    s.place(xb, rel_to='TBL', offset=[shelf_depth,gl+ls1_w,0])
+    s.place(xb, rel_to='TBL', offset=[shelf_depth,gl+ls1_w-1,0])
+    s.place(xb, rel_to='TBL', offset=[shelf_depth,gl+right_shelf_w-1,0])
 
     self.place(s)
     return None
