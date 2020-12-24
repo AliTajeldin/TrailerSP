@@ -1,8 +1,3 @@
-* Bed8020 should take a Rail factory
-* get rid of bed8020 and just use a regular shelf!
-* add a "skipShelves" parameter to shelf unit to avoid putting first N shelves.
-* make shelfs in rear layout made of 8020 units.
-* wood shelfs should extend all the way to the ground (the side panels), no hanging shelfs
 * add prices to BOM?
 * Create README.md with how to generate, sample images, how to modify, etc (may need docs and images dirs)
 * add rest of electronics:

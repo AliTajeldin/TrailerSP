@@ -16,16 +16,16 @@ class Water(Item):
     h2o += translate([2,l/2.0,h-3])((cylinder(r=1.5, h=3, segments=10)))
     return s.c(s.color, h2o)
 
-class Water5L(Water):
+class Water22L(Water):
   def __init__(self):
     super().__init__([13.75,6.75,18])
 
   def desc(s):
     return "5L Water Jug"
 
-class Water6L(Water):
+class Water20L(Water):
   def __init__(self):
-    super().__init__([14,8,21])
+    super().__init__([13.5,6.5,19])
 
   def desc(s):
     return "6L Water Jug"

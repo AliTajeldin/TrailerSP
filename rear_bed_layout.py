@@ -7,7 +7,7 @@ from lib.bed import BedTop
 from lib.shell import SilverEagle, SilverStar
 from lib.solar import SolarRenegy200w, SolarRenegy300w
 from lib.fridge import FridgeIcecoGO20, FridgeIcecoVL35, FridgeAlpicoolT60
-from lib.water import Water5L, Water6L
+from lib.water import Water22L, Water20L
 from lib.shelf import ShelfUnit, ShelfUnit8020, Shelf8020
 from lib.battery import Battleborn100ah
 from lib.toilet import DryFlushToilet
@@ -33,7 +33,7 @@ class RearBedLayout(Item):
     solar = SolarRenegy200w()
     toilet = DryFlushToilet()
     bat = Battleborn100ah()
-    water = Water6L()
+    water = Water20L()
     chair = Chair8020()
     table = LagunTable([12,24,33])
     kitchen_w = 2.5 * 12
