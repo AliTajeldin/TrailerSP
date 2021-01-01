@@ -3,9 +3,9 @@ from solid import *
 from solid.utils import *  # Not required, but the utils module is useful
 from lib.item import Item
 from lib.rail8020 import Rail1010
-from lib.wood import Panel_1_8, Ply_1_2
+from lib.wood import Panel_1_8, Ply_1_2, Lumber_1_2
 
-class ShelfUnit(Item):
+class ShelfUnitPly(Item):
   def __init__(self, dim, count=3, with_back=False, color=(144, 190, 109), woodFactory=Ply_1_2, desc=""):
     super().__init__(dim)
     self.color = color
@@ -16,7 +16,7 @@ class ShelfUnit(Item):
 
   def desc(s):
     u = ", " + s.user_desc  if s.user_desc else ""
-    return "Wood Shelf Unit{0}: {1}".format(u, s.dimStr3D())
+    return "Wood Shelf Unit (ply){0}: {1}".format(u, s.dimStr3D())
 
   def render(s):
     (w,l,h) = s.getDim()
@@ -35,6 +35,49 @@ class ShelfUnit(Item):
     v_shelf = s.woodFactory(h,l, color=s.color)
     s.place(v_shelf, rotation='V')
     s.place(v_shelf, rotation='V', rel_to='BR')
+    return None
+
+class ShelfUnitLumber(Item):
+  def __init__(self, dim, count=3, color=(144, 190, 109), plyFactory=Ply_1_2, lumberFactory=Lumber_1_2, desc=""):
+    super().__init__(dim)
+    self.color = color
+    self.count = count
+    self.plyFactory = plyFactory
+    self.lumberFactory = lumberFactory
+    self.user_desc = desc
+
+  def desc(s):
+    u = ", " + s.user_desc  if s.user_desc else ""
+    return "Wood Shelf Unit (lum){0}: {1}".format(u, s.dimStr3D())
+
+  def render(s):
+    (w,l,h) = s.getDim()
+    ply_sz = s.plyFactory.SIZE
+    lum_sz = s.lumberFactory.SIZE
+
+    leg_h = h-ply_sz
+    leg = s.lumberFactory(leg_h)
+    s.place(leg, rotation='VR', rel_to='BL')
+    s.place(leg, rotation='VR', rel_to='BR')
+    s.place(leg, rotation='VR', rel_to='FL')
+    s.place(leg, rotation='VR', rel_to='FR')
+
+    sep = (leg_h) / (s.count+1.0)
+    shelf = s.plyFactory(w-2*lum_sz[1],l, color=s.color)
+    hor_rail = s.lumberFactory(w-2*lum_sz[1])
+    dep_rail = s.lumberFactory(l-2*lum_sz[0])
+    for i in range(s.count):
+      sbh = (i+1)*sep # shelf bottom height
+      s.place(shelf, offset=[lum_sz[1],0,sbh])
+      s.place(hor_rail, rotation='B', rel_to='BL', offset=[lum_sz[1],0,sbh-lum_sz[1]])
+      s.place(hor_rail, rotation='B', rel_to='FL', offset=[lum_sz[1],0,sbh-lum_sz[1]])
+      s.place(dep_rail, rotation='L', rel_to='BL', offset=[0,lum_sz[0],sbh-lum_sz[0]+ply_sz])
+      s.place(dep_rail, rotation='L', rel_to='BR', offset=[0,lum_sz[0],sbh-lum_sz[0]+ply_sz])
+
+
+    # v_shelf = s.woodFactory(h,l, color=s.color)
+    # s.place(v_shelf, rotation='V')
+    # s.place(v_shelf, rotation='V', rel_to='BR')
     return None
 
 class Shelf8020(Item):

@@ -98,6 +98,8 @@ class Item(ABC):
        rotation: L,R,180 to rotate item 90,-90,180 before placing (rot around Z-Axis)
                 V to rotate item 90 along y-axis to vertical
                 VR in addition to vertical as above, add a normal right rotation on z-axis (bottom of object is now facing us).
+                F,B to rotate front/back on the X-Axis
+                FL in addtion to F rotation above, rotate to left (z-axis)
        offset: (x,y,z) offset to apply to item after rotation
        Note: the placement takes the w,l,h of child item when placing.  if child item is placed on the right side of this item,
        then the offset is from the right side of the child item.
@@ -121,6 +123,15 @@ class Item(ABC):
     if rotation == 'VR':
       out = rotate(-90)(rotate([0,-90,0])(out))
       (w,l,h) = (l,h,w)
+    if rotation == 'F':
+      out = up(l)(rotate([-90,0,0])(out))
+      (l,h) = (h,l)
+    if rotation == 'B':
+      out = forward(h)(rotate([90,0,0])(out))
+      (l,h) = (h,l)
+    if rotation == 'BL':
+      out = rotate(90)(rotate([90,0,0])(out))
+      (w,l,h) = (h,w,l)
 
     if rel_to in ('FL', 'TFL'):
       out = translate([0,pl-l,0])(out)

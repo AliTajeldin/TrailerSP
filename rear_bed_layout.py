@@ -8,7 +8,7 @@ from lib.shell import SilverEagle, SilverStar
 from lib.solar import SolarRenegy200w, SolarRenegy300w
 from lib.fridge import FridgeIcecoGO20, FridgeIcecoVL35, FridgeAlpicoolT60
 from lib.water import Water22L, Water20L
-from lib.shelf import ShelfUnit, ShelfUnit8020, Shelf8020
+from lib.shelf import ShelfUnitPly, ShelfUnit8020, Shelf8020
 from lib.battery import Battleborn100ah
 from lib.toilet import DryFlushToilet
 from lib.stove import Stove
@@ -73,7 +73,7 @@ class RearBedLayout(Item):
     kus = ShelfUnit8020((kitchen_w, shelf_depth, kh), count=2, has_top_shelf=True, desc="kitchen unit")
     s.place(kus, rel_to='BR', rotation='R', offset=[0,k_off,0])
 
-    spice_rack = ShelfUnit((shelf_depth, 4, sh-kh), count=3, with_back=True, desc="spice rack")
+    spice_rack = ShelfUnitPly((shelf_depth, 4, sh-kh), count=3, with_back=True, desc="spice rack")
     s.place(spice_rack, rel_to='BR', rotation=180, offset=[0,k_off,kh])
 
     stove_off = s.door_off + s.door_w + 1

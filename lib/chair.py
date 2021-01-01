@@ -1,7 +1,7 @@
 from solid import *
 from solid.utils import *  # Not required, but the utils module is useful
 from lib.item import Item
-from lib.shelf import ShelfUnit, ShelfUnit8020
+from lib.shelf import ShelfUnitPly, ShelfUnit8020
 from lib.rail8020 import Rail1515
 
 class Chair(Item):
@@ -15,7 +15,7 @@ class Chair(Item):
     (w,l,h) = s.getDim()
     leg_h = s.chair_leg_h
 
-    seat = ShelfUnit([w,l,leg_h], count=0, color=s.color).render_all()
+    seat = ShelfUnitPly([w,l,leg_h], count=0, color=s.color).render_all()
     back = up(leg_h)(cube([w,2,h-leg_h]))
     seat = s.c(s.color, union()(seat, back))
 
