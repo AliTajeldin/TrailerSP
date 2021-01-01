@@ -55,6 +55,7 @@ class ShelfUnitLumber(Item):
     ply_sz = s.plyFactory.SIZE
     lum_sz = s.lumberFactory.SIZE
 
+    # -- legs
     leg_h = h-ply_sz
     leg = s.lumberFactory(leg_h)
     s.place(leg, rotation='VR', rel_to='BL')
@@ -62,6 +63,7 @@ class ShelfUnitLumber(Item):
     s.place(leg, rotation='VR', rel_to='FL')
     s.place(leg, rotation='VR', rel_to='FR')
 
+    # -- mid shelfs
     sep = (leg_h) / (s.count+1.0)
     shelf = s.plyFactory(w-2*lum_sz[1],l, color=s.color)
     hor_rail = s.lumberFactory(w-2*lum_sz[1])
@@ -74,10 +76,14 @@ class ShelfUnitLumber(Item):
       s.place(dep_rail, rotation='L', rel_to='BL', offset=[0,lum_sz[0],sbh-lum_sz[0]+ply_sz])
       s.place(dep_rail, rotation='L', rel_to='BR', offset=[0,lum_sz[0],sbh-lum_sz[0]+ply_sz])
 
+    # -- top shelf
+    top_shelf = s.plyFactory(w,l, color=s.color)
+    s.place(top_shelf, rel_to='TBL')
+    s.place(hor_rail, rotation='B', rel_to='TBL', offset=[lum_sz[1],0,-ply_sz])
+    s.place(hor_rail, rotation='B', rel_to='TFL', offset=[lum_sz[1],0,-ply_sz])
+    s.place(dep_rail, rotation='L', rel_to='TBL', offset=[0,lum_sz[0],-ply_sz])
+    s.place(dep_rail, rotation='L', rel_to='TBR', offset=[0,lum_sz[0],-ply_sz])
 
-    # v_shelf = s.woodFactory(h,l, color=s.color)
-    # s.place(v_shelf, rotation='V')
-    # s.place(v_shelf, rotation='V', rel_to='BR')
     return None
 
 class Shelf8020(Item):
