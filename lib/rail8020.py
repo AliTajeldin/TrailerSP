@@ -31,6 +31,7 @@ class Rail8020(Item):
     return r
 
 class Rail1515(Rail8020):
+  # $.53/inch for 1515, and $.45 for lite 1515
   SIZE=1.5
   def __init__(self, length, color=(204, 69, 96)):
     super().__init__(length, color)
