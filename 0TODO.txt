@@ -1,3 +1,5 @@
+* combine the two trailers into one file (now that we have a separate render file)
+* make shelf types a factory for both trailers.
 * add prices to BOM?
 * Create README.md with how to generate, sample images, how to modify, etc (may need docs and images dirs)
 * add rest of electronics:

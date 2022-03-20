@@ -1,10 +1,11 @@
 {
   "python.linting.enabled": false,
   "emeraldwalk.runonsave": {
+
     "commands": [
         {
             "match": "\\.py$",
-            "cmd": "/usr/bin/env python trailer_sp.py"
+            "cmd": "/usr/bin/env python render.py"
         }
     ]
   },
