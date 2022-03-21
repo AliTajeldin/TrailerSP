@@ -29,7 +29,7 @@ class WeighBench(Item):
   
   def render(s):
     (w,l,h) = s.getDim()
-    seat_l = 54
+    seat_l = 53
 
     base = Cube([2,l,2])
     pole = Cube([2,2,h])
@@ -44,19 +44,21 @@ class WeighBench(Item):
 
 class FishingBench(Item):
   def __init__(self):
-      super().__init__([66, 37, 50])
+      super().__init__([66, 31, 42])
       self.color = (92, 43, 4)
 
   def render(s):
     (w,l,h) = s.getDim()
     c = s.color
 
-    base_h = 35
+    base_h = 21
     base = Cube([17,l,base_h], color=c)
-    top = Cube([w,l, h-base_h], color=c)
+    top_b = Cube([w,l,7], color=c)
+    top_t = Cube([w,15,h-7-base_h], color=c)
     s.place(base, rel_to='BL')
     s.place(base, rel_to='BR')
-    s.place(top, rel_to='T')
+    s.place(top_b, offset=[0,0,base_h])
+    s.place(top_t, rel_to='FL', offset=[0,0,base_h+7])
 
 class TvStand(Item):
   def __init__(self):
@@ -110,16 +112,24 @@ class Layout(Item):
   def render(s):
     lr_floor = s.c((87, 117, 144), cube([LR_DIM[0], LR_DIM[1], 0.001]))
     dr_floor = s.c((87, 117, 200), cube([DR_DIM[0], DR_DIM[1], 6]))
-    lr_rail = s.c((0,0,0,100), right(LR_DIM[0])(cube([0.001, 65, 48])))
-    floors = union()(
+    lr_rail = s.c((0,0,0), cube([0.001, 65, 42]))
+    e_wall = s.c((0,0,0), cube([48,8,80]))
+    fire =  s.c((218, 232, 247), cube([26,42,80]))
+    dr_wall = s.c((0,0,0), cube([5,71,80]))
+    shelf =  s.c((218, 232, 247), cube([32,31,80]))
+    a = union()(
       lr_floor,
-      lr_rail,
+      right(LR_DIM[0])(lr_rail),
+      translate([LR_DIM[0], 65+61, 0])(e_wall),
+      translate([LR_DIM[0], 65+61+8, 0])(fire),
       LivingRoom(LR_DIM).render_all(),
       forward(LR_DIM[1])(dr_floor),
+      translate([DR_DIM[0],LR_DIM[1],0])(dr_wall),
+      translate([DR_DIM[0]+5,LR_DIM[1],0])(shelf),
       translate([0,LR_DIM[1],6])(DiningRoom(DR_DIM).render_all()),
       )
 
-    return floors
+    return a
 
 def render():
   l = Layout([0,0,0])
