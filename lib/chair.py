@@ -5,11 +5,11 @@ from lib.shelf import ShelfUnitPly, ShelfUnit8020
 from lib.rail8020 import Rail1515
 
 class Chair(Item):
-  def __init__(self):
-    super().__init__([30,20,42])
+  def __init__(self, dim=[30,20,42], color=(2,48,2), cushion_color=(99,112,17)):
+    super().__init__(dim)
     self.chair_leg_h = 18
-    self.color = (2,48,2)
-    self.cushion_color = (99,112,17)
+    self.color = color
+    self.cushion_color = cushion_color
 
   def render(s):
     (w,l,h) = s.getDim()

@@ -95,6 +95,7 @@ class Item(ABC):
     """places a child item inside this item.
        rel_to: BL, FL, BR, FR corresponding to BAck/Front Left/Right
                TBL, TFL, TBR, TFR same as above but relative to top of parent item
+               CX, CY, CZ center relative to x,y,z axis
        rotation: L,R,180 to rotate item 90,-90,180 before placing (rot around Z-Axis)
                 V to rotate item 90 along y-axis to vertical
                 VR in addition to vertical as above, add a normal right rotation on z-axis (bottom of object is now facing us).
@@ -141,6 +142,13 @@ class Item(ABC):
       out = translate([pw-w,0,0])(out)
     if rel_to[0] == 'T':
       out = up(ph-h)(out)
+
+    if rel_to == 'CX':
+      out = right((pw-w)/2.0)(out)
+    if rel_to == 'CY':
+      out = forward((pl-l)/2.0)(out)
+    if rel_to == 'CZ':
+      out = up((ph-h)/2.0)(out)
 
     if offset:
       out = translate(offset)(out)
