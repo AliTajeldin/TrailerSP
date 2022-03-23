@@ -89,8 +89,8 @@ class LivingRoom(Item):
     s.place( CoffeeTable(), rel_to='FL', offset=[0, -50, 0])
 
     s.place( WeighBench(), rel_to='BR', rotation=180, offset=[-40,6,0])
-    # s.place( WeighBench(), rel_to='BR', rotation='R', offset=[-6,40,0])
-    s.place( FishingBench(), rel_to='BL', rotation='L', offset=[0,24,0])
+    # s.place( FishingBench(), rel_to='BL', r='L', offset=[0,24,0])
+    s.place( FishingBench(), rel_to='BL', rotation='FL', offset=[0,0,0])
 
     s.place( TvStand(), rel_to='FR', rotation='L', offset=[0,-40, 0])
     
