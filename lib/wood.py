@@ -25,7 +25,7 @@ class Ply_1(WoodSheet):
     super().__init__([w, l, 1], color)
 
   def desc(s):
-    return "1/2\" Plywood: " + s.dimStr2D()
+    return "1\" Plywood: " + s.dimStr2D()
 
 class Panel_1_8(WoodSheet):
   SIZE = 0.125

@@ -32,6 +32,7 @@ class Item(ABC):
   def __init__(self, dim):
     self.dim = [int(d) if int(d)==float(d) else d for d in dim]
     self.r_children = [] # rendered children
+    self.rpos = (0,0,0) # last rendered position of this item relative to parent.
     self._render_cache = 'not-rendered' # can't use None as marker as it is a valid render result
     self.bom = BillOfMaterial(self)
 
@@ -47,10 +48,14 @@ class Item(ABC):
   def getH(s):
     return s.getDim()[2]
 
+  def getRPos(s):
+    return s.rpos
+
   def c(s, cv, item):
     """apply color vector to given item and return the colored item"""
     return color([c/255.0 for c in cv])(item)
 
+  # TODO: remove next two funcs t,r
   def t(s, tv, item):
     """apply translation vector to given item"""
     return translate(tv)(item)
@@ -91,11 +96,14 @@ class Item(ABC):
     s.render_all()
     s.bom.print()
 
-  def place(s, item, rel_to='BL', rotation='', offset=None):
+  def place(s, item, rel_to='BL', rel_to_item=[], rotation='', offset=[0,0,0]):
     """places a child item inside this item.
-       rel_to: BL, FL, BR, FR corresponding to BAck/Front Left/Right
+       rel_to: BL, FL, BR, FR corresponding to Back/Front Left/Right
                TBL, TFL, TBR, TFR same as above but relative to top of parent item
                CX, CY, CZ center relative to x,y,z axis
+       rel_to_item: (item, rel_pos) or [(item, rel_pos), ...] for multiple placements.
+                item is the item we want to position next to.
+                rel_pos is one of "LRFBTU" for left, right, front, back, top, under
        rotation: L,R,180 to rotate item 90,-90,180 before placing (rot around Z-Axis)
                 YL|YR to rotate item left/right 90 degress along y-axis to vertical
                 F,B to rotate front/back on the X-Axis
@@ -132,24 +140,45 @@ class Item(ABC):
         out = forward(h)(rotate([90,0,0])(out))
         (l,h) = (h,l)
 
+    (dx,dy,dz) = (0,0,0)
+
     if rel_to in ('FL', 'TFL'):
-      out = translate([0,pl-l,0])(out)
+      dy = pl-l
     if rel_to in ('FR', 'TFR'):
-      out = translate([pw-w,pl-l,0])(out)
+      (dx,dy) = (pw-w,pl-l)
     if rel_to in ('BR', 'TBR'):
-      out = translate([pw-w,0,0])(out)
+      dx = pw-w
     if rel_to[0] == 'T':
-      out = up(ph-h)(out)
+      dz = ph-h
 
     if rel_to == 'CX':
-      out = right((pw-w)/2.0)(out)
+      dx = (pw-w)/2.0
     if rel_to == 'CY':
-      out = forward((pl-l)/2.0)(out)
+      dy = (pl-l)/2.0
     if rel_to == 'CZ':
-      out = up((ph-h)/2.0)(out)
+      dz = (ph-h)/2.0
 
-    if offset:
-      out = translate(offset)(out)
+    if type(rel_to_item) == type(()):
+      rel_to_item = [rel_to_item]
+
+    for rti in rel_to_item:
+      (i, r) = rti
+      irp = i.getRPos()
+      if "L" == r:
+        dx = irp[0] - w
+      if "R" == r:
+        dx = irp[0] + i.getW()
+      if "F" == r:
+        dy = irp[1] + i.getL()
+      if "B" == r:
+        dy = irp[1] - l
+      if "T" == r:
+        dz = irp[2] + i.getH()
+      if "U" == r:
+        dz = irp[2] - h
+   
+    item.rpos = (dx+offset[0], dy+offset[1], dz+offset[2])
+    out = translate(item.rpos)(out)
 
     s.r_children.append(out)
     s.bom.add_child(item)
