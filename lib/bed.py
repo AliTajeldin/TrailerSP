@@ -6,7 +6,7 @@ from lib.rail8020 import Rail1515
 from lib.wood import Ply_1_2
 
 BED_TOP_HEIGHT = 6.5 # 0.5 inch ply + 6" mattress
-BED_DIM = [75, 56, 24] # full bed size
+BED_DIM = [78, 57, 24] # full bed size
 
 class Mattress(Item):
   def __init__(self, w, l):

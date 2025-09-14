@@ -2,6 +2,10 @@ from abc import ABC, abstractmethod
 from solid import *
 from solid.utils import *  # Not required, but the utils module is useful
 
+def addOffsets(o1, o2):
+  return (o1[0]+o2[0], o1[1]+o2[1], o1[2]+o2[2])
+
+
 class BillOfMaterial(object):
   def __init__(self, item):
     self.item = item
@@ -177,7 +181,7 @@ class Item(ABC):
       if "U" == r:
         dz = irp[2] - h
    
-    item.rpos = (dx+offset[0], dy+offset[1], dz+offset[2])
+    item.rpos = addOffsets((dx,dy,dz), offset)
     out = translate(item.rpos)(out)
 
     s.r_children.append(out)

@@ -22,9 +22,9 @@ class LagunTable(Item):
 
 
 class Table(Item):
-  def __init__(self, dim):
+  def __init__(self, dim, color=(31,51,105)):
     super().__init__(dim)
-    self.color = (31,51,105)
+    self.color = color
   
   def render(s):
     (w,l,h) = s.getDim()
