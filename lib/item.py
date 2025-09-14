@@ -105,9 +105,10 @@ class Item(ABC):
        rel_to: BL, FL, BR, FR corresponding to Back/Front Left/Right
                TBL, TFL, TBR, TFR same as above but relative to top of parent item
                CX, CY, CZ center relative to x,y,z axis
-       rel_to_item: (item, rel_pos) or [(item, rel_pos), ...] for multiple placements.
-                item is the item we want to position next to.
+       rel_to_item: (ritem, rel_pos) or [(ritem, rel_pos), ...] for multiple placements.
+                ritem is the item we want to position next to.
                 rel_pos is one of "LRFBTU" for left, right, front, back, top, under
+                if "A" as in "AL" or "AT" then align position to left, top, etc.
        rotation: L,R,180 to rotate item 90,-90,180 before placing (rot around Z-Axis)
                 YL|YR to rotate item left/right 90 degress along y-axis to vertical
                 F,B to rotate front/back on the X-Axis
@@ -170,16 +171,28 @@ class Item(ABC):
       irp = i.getRPos()
       if "L" == r:
         dx = irp[0] - w
+      if "AL" == r:
+        dx = irp[0]
       if "R" == r:
         dx = irp[0] + i.getW()
+      if "AR" == r:
+        dx = irp[0] + i.getW() - w
       if "F" == r:
         dy = irp[1] + i.getL()
+      if "AF" == r:
+        dy = irp[1] + i.getL() - l
       if "B" == r:
         dy = irp[1] - l
+      if "AB" == r:
+        dy = irp[1]
       if "T" == r:
         dz = irp[2] + i.getH()
+      if "AT" == r:
+        dz = irp[2] + i.getH() - h
       if "U" == r:
         dz = irp[2] - h
+      if "AU" == r:
+        dz = irp[2]
    
     item.rpos = addOffsets((dx,dy,dz), offset)
     out = translate(item.rpos)(out)

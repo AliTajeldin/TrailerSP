@@ -57,7 +57,8 @@ class BedRoom(Item):
     drawer1S = ShelfUnit8020([15,12,24], count=2, has_top_shelf=True)
     drawer2S = ShelfUnit8020([16,18,24], count=1, has_top_shelf=True)
     # small/large tall drawers stack (of two drawers)
-    drawer1T = ShelfUnit8020([15,12,48], count=5, has_top_shelf=True)
+    drawer1T = ShelfUnit8020([15,12,48], count=5, has_top_shelf=True) # TODO: remove me!!!
+    drawer1Ts = [ShelfUnit8020([15,12,48], count=5, has_top_shelf=True) for i in range(5)]
     drawer2T = ShelfUnit8020([16,18,48], count=4, has_top_shelf=True)
 
     charger = Cube([25,18,36], color = (237, 232, 208))
@@ -72,10 +73,9 @@ class BedRoom(Item):
 
     s.place(drawer1S, rel_to_item=[(block1,"R"), (block2,"B")])
     s.place(desk, rel_to_item=[(drawer1S,"R"), (block2,"B")], offset=[1,0,0])
-    chair_off = addOffsets(desk.getRPos(), [2, -15-chair.getL(), 0])
-    s.place(chair, offset=chair_off)
-    food_off = addOffsets(chair.getRPos(), [4+chair.getW(), 0, 0])
-    s.place(food_table, offset=food_off, rotation="L")
+    s.place(chair, rel_to_item=[(desk,"B"), (desk,"AL")], offset=[0,-15,0])
+    # food_off = addOffsets(chair.getRPos(), [4+chair.getW(), 0, 0])
+    s.place(food_table, rel_to_item=[(chair,"R"), (chair,"AB")], offset=[4,0,0], rotation="L")
     s.place(drawer2S, rel_to_item=[(desk,"R"), (block2,"B")], offset=[1,0,0])
 
     s.place(charger, rotation="L", rel_to_item=(block1,"B"))
@@ -86,16 +86,14 @@ class BedRoom(Item):
     s.place(bed, rel_to="BR")
     s.place(nightstand, rotation="L", rel_to="BR", rel_to_item=(bed,"F"), offset=[0,1,0])
 
-    dy = 89
-    dx = drawer1T.getW()
-    s.place(drawer1T, rel_to="BR", offset=[0,dy,0])
-    s.place(drawer1T, rel_to="BR", offset=[-dx,dy,0])
-    s.place(drawer1T, rel_to="BR", offset=[-2*dx,dy,0])
-    dy = dy + 12
-    dx2 = drawer2T.getW()
-    s.place(drawer2T, rel_to="BR", offset=[0,dy,0])
-    s.place(drawer1T, rel_to="BR", offset=[-dx2,dy,0])
-    s.place(drawer1T, rel_to="BR", offset=[-dx2-dx,dy,0])
+    d = drawer1Ts
+    d2t = drawer2T
+    s.place(d[0], rel_to="BR", offset=[0,89,0])
+    s.place(d[1], rel_to_item=[(d[0],"L"), (d[0],"AB")], offset=(-0.5,0,0))
+    s.place(d[2], rel_to_item=[(d[1],"L"), (d[1],"AB")], offset=(-0.5,0,0))
+    s.place(d2t,  rel_to_item=[(d[0],"F"), (d[0],"AR")], offset=[0,0.5,0])
+    s.place(d[3], rel_to_item=[(d2t,"L"), (d2t,"AB")],   offset=[-0.5,0,0])
+    s.place(d[4], rel_to_item=[(d[3],"L"), (d[3],"AB")], offset=(-0.5,0,0))
     return None
 
 
