@@ -37,6 +37,7 @@ class Item(ABC):
     self.dim = [int(d) if int(d)==float(d) else d for d in dim]
     self.r_children = [] # rendered children
     self.rpos = (0,0,0) # last rendered position of this item relative to parent.
+    self.rdim = (0,0,0) # dimension of item when it got rendered.
     self._render_cache = 'not-rendered' # can't use None as marker as it is a valid render result
     self.bom = BillOfMaterial(self)
 
@@ -54,6 +55,9 @@ class Item(ABC):
 
   def getRPos(s):
     return s.rpos
+
+  def getRDim(s):
+    return s.rdim
 
   def c(s, cv, item):
     """apply color vector to given item and return the colored item"""
@@ -169,32 +173,34 @@ class Item(ABC):
     for rti in rel_to_item:
       (i, r) = rti
       irp = i.getRPos()
+      ird = i.getRDim()
       if "L" == r:
         dx = irp[0] - w
       if "AL" == r:
         dx = irp[0]
       if "R" == r:
-        dx = irp[0] + i.getW()
+        dx = irp[0] + ird[0]
       if "AR" == r:
-        dx = irp[0] + i.getW() - w
+        dx = irp[0] + ird[0] - w
       if "F" == r:
-        dy = irp[1] + i.getL()
+        dy = irp[1] + ird[1]
       if "AF" == r:
-        dy = irp[1] + i.getL() - l
+        dy = irp[1] + ird[1] - l
       if "B" == r:
         dy = irp[1] - l
       if "AB" == r:
         dy = irp[1]
       if "T" == r:
-        dz = irp[2] + i.getH()
+        dz = irp[2] + ird[2]
       if "AT" == r:
-        dz = irp[2] + i.getH() - h
+        dz = irp[2] + ird[2] - h
       if "U" == r:
         dz = irp[2] - h
       if "AU" == r:
         dz = irp[2]
    
     item.rpos = addOffsets((dx,dy,dz), offset)
+    item.rdim = (w,l,h)
     out = translate(item.rpos)(out)
 
     s.r_children.append(out)

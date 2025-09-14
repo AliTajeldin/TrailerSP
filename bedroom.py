@@ -35,7 +35,7 @@ class Desk(Item):
 
     return None
 
-class BedRoom(Item):
+class BedRoom0(Item):
   def __init__(self):
     super().__init__(BR_DIM)
 
@@ -54,11 +54,10 @@ class BedRoom(Item):
     s.place(window, offset=[0, 60, 24], rotation="L")
 
     # small/large short drawers
-    drawer1S = ShelfUnit8020([15,12,24], count=2, has_top_shelf=True)
+    drawer1S = ShelfUnit8020([12,14,24], count=2, has_top_shelf=True)
     drawer2S = ShelfUnit8020([16,18,24], count=1, has_top_shelf=True)
     # small/large tall drawers stack (of two drawers)
-    drawer1T = ShelfUnit8020([15,12,48], count=5, has_top_shelf=True) # TODO: remove me!!!
-    drawer1Ts = [ShelfUnit8020([15,12,48], count=5, has_top_shelf=True) for i in range(5)]
+    drawer1Ts = [ShelfUnit8020([12,14,48], count=5, has_top_shelf=True) for i in range(5)]
     drawer2T = ShelfUnit8020([16,18,48], count=4, has_top_shelf=True)
 
     charger = Cube([25,18,36], color = (237, 232, 208))
@@ -96,8 +95,71 @@ class BedRoom(Item):
     s.place(d[4], rel_to_item=[(d[3],"L"), (d[3],"AB")], offset=(-0.5,0,0))
     return None
 
+class BedRoom1(Item):
+  def __init__(self):
+    super().__init__(BR_DIM)
+
+  def render(s):
+    block1 = Cube([19,57,s.getH()], color=(218, 232, 247))
+    block2 = Cube([67,17,s.getH()], color=(218, 232, 247))
+    floor = Cube([s.getW(), s.getL(), 0.001], color=(87, 117, 144))
+    door = Door(35, 81)
+    window = Window(34, 58)
+
+    s.place(floor)
+    s.place(block1, rel_to="FL")
+    s.place(block2, rel_to="FL", rel_to_item=(block1, "R"))
+    s.place(door, rel_to="FR", rotation="L", offset=[0,-7,0])
+    s.place(window, offset=[0, 21, 24], rotation="L")
+    s.place(window, offset=[0, 60, 24], rotation="L")
+
+    # small/large short drawers
+    drawer1S = ShelfUnit8020([12,14,24], count=2, has_top_shelf=True)
+    drawer2S = ShelfUnit8020([16,18,24], count=1, has_top_shelf=True)
+    # small/large tall drawers stack (of two drawers)
+    drawer1Ts = [ShelfUnit8020([12,14,48], count=5, has_top_shelf=True) for i in range(5)]
+    drawer2T = ShelfUnit8020([16,18,48], count=4, has_top_shelf=True)
+
+    charger = Cube([25,18,36], color = (237, 232, 208))
+    elec_table = Table([71,29,28], color=(200,200,200))
+    elec_shelf_1 = ShelfUnitPly([31,12,48], count=2, with_back=True)
+    elec_shelf_2 = ShelfUnitPly([29,12,48], count=2, with_back=True)
+    desk = Desk()
+    food_table = Table([20,16,30], color=(20,20,20))
+    chair = Chair(dim=[29,23,46])
+    bed = Bed()
+    nightstand = Cube([22, 15, 24], color=(20,20,20))
+
+    s.place(bed, rel_to="BR", rotation="R")
+    s.place(nightstand, rel_to_item=[(bed,"L"),(bed,"AF")], offset=[-1,0,0])
+
+    s.place(drawer1S, rel_to_item=[(block1,"R"), (block2,"B")])
+    s.place(desk, rel_to_item=[(drawer1S,"R"), (block2,"B")], offset=[1,0,0])
+    s.place(chair, rel_to_item=[(desk,"B"), (desk,"AL")], offset=[0,-15,0])
+    s.place(food_table, rel_to_item=[(chair,"R"), (chair,"AB")], offset=[4,0,0], rotation="L")
+    s.place(drawer2S, rel_to_item=[(desk,"R"), (block2,"B")], offset=[1,0,0])
+
+    s.place(charger, rotation="L", rel_to_item=(block1,"B"))
+
+    s.place(elec_table, rel_to_item=(bed,"L"), offset=[-2,0,0])
+    s.place(elec_shelf_2, rotation="L", offset=[0,0,0])
+    s.place(elec_shelf_1, rotation="L", rel_to_item=(elec_shelf_2,"F"), offset=[0,7,0])
+
+    d = drawer1Ts
+    d2t = drawer2T
+    s.place(d[0], rel_to="BR", offset=[0,89,0])
+    s.place(d[1], rel_to_item=[(d[0],"L"), (d[0],"AB")], offset=(-0.5,0,0))
+    s.place(d[2], rel_to_item=[(d[1],"L"), (d[1],"AB")], offset=(-0.5,0,0))
+    s.place(d2t,  rel_to_item=[(d[0],"F"), (d[0],"AR")], offset=[0,0.5,0])
+    s.place(d[3], rel_to_item=[(d2t,"L"), (d2t,"AB")],   offset=[-0.5,0,0])
+    s.place(d[4], rel_to_item=[(d[3],"L"), (d[3],"AB")], offset=(-0.5,0,0))
+    # s.place(d[4], rel_to_item=[(elec_shelf_1,"F"),], rotation="L", offset=(0,0.5,0))
+    # s.place(d[4], rel_to_item=[(d[4],"F"),], rotation="L", offset=(0,0.5,0))
+    return None
+
 
 def render():
-  b = BedRoom()
-  return b.render_all()
+  b0 = BedRoom0()
+  b1 = BedRoom1()
+  return union()(b0.render_all(), right(20*12)(b1.render_all()))
 

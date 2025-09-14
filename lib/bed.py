@@ -36,6 +36,9 @@ class BedTop(Item):
     mattress = Mattress(w-1, l-1)
     s.place(mattress, offset=[0.5,0.5,0.5])
 
+    pillow = Cube([30,15,2], color=(200,200,200))
+    s.place(pillow, rel_to="CY", rel_to_item=(mattress, "T"), rotation="L", offset=[1,0,0])
+
     return None
 
 class Bed(Item):
