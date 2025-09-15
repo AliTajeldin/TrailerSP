@@ -82,7 +82,7 @@ class BedRoom0(Item):
 
     s.place(elec_shelf_1, rotation=180,)
     s.place(elec_shelf_2, rotation=180, rel_to_item=(elec_shelf_1,"R"), offset=[10,0,0])
-    s.place(bed, rel_to="BR")
+    s.place(bed, rel_to="BR", rotation=180)
     s.place(nightstand, rotation="L", rel_to="BR", rel_to_item=(bed,"F"), offset=[0,1,0])
 
     d = drawer1Ts
@@ -157,9 +157,71 @@ class BedRoom1(Item):
     # s.place(d[4], rel_to_item=[(d[4],"F"),], rotation="L", offset=(0,0.5,0))
     return None
 
+class BedRoom2(Item):
+  def __init__(self):
+    super().__init__(BR_DIM)
+
+  def render(s):
+    block1 = Cube([19,57,s.getH()], color=(218, 232, 247))
+    block2 = Cube([67,17,s.getH()], color=(218, 232, 247))
+    floor = Cube([s.getW(), s.getL(), 0.001], color=(87, 117, 144))
+    door = Door(35, 81)
+    window = Window(34, 58)
+
+    s.place(floor)
+    s.place(block1, rel_to="FL")
+    s.place(block2, rel_to="FL", rel_to_item=(block1, "R"))
+    s.place(door, rel_to="FR", rotation="L", offset=[0,-7,0])
+    s.place(window, offset=[0, 21, 24], rotation="L")
+    s.place(window, offset=[0, 60, 24], rotation="L")
+
+    # small/large short drawers
+    drawer1S = ShelfUnit8020([12,14,24], count=2, has_top_shelf=True)
+    drawer2S = ShelfUnit8020([16,18,24], count=1, has_top_shelf=True)
+    # small/large tall drawers stack (of two drawers)
+    drawer1Ts = [ShelfUnit8020([12,14,48], count=5, has_top_shelf=True) for i in range(5)]
+    drawer2T = ShelfUnit8020([16,18,48], count=4, has_top_shelf=True)
+
+    charger = Cube([25,18,36], color = (237, 232, 208))
+    elec_table = Table([71,29,28], color=(200,200,200))
+    elec_shelf_1 = ShelfUnitPly([31,12,48], count=2, with_back=True)
+    elec_shelf_2 = ShelfUnitPly([29,12,48], count=2, with_back=True)
+    desk = Desk()
+    food_table = Table([20,16,30], color=(20,20,20))
+    chair = Chair(dim=[29,23,46])
+    bed = Bed()
+    nightstand = Cube([22, 15, 24], color=(20,20,20))
+
+    s.place(drawer2S)
+    s.place(drawer1S, rel_to_item=[(drawer2S,"T")])
+    s.place(desk, rotation=180, rel_to_item=[(drawer2S,"R")], offset=[1,0,0])
+    s.place(chair, rel_to_item=[(desk,"F"), (desk,"AR")], offset=[0,15,0], rotation=180)
+    s.place(food_table, rel_to_item=[(chair,"L"), (chair,"AF")], offset=[-4,0,0], rotation="L")
+
+    s.place(charger, rotation="L", rel_to_item=(block1,"B"))
+
+    s.place(bed, rel_to="BR", rotation=180)
+    s.place(nightstand, rotation="L", rel_to="BR", rel_to_item=(bed,"F"), offset=[0,1,0])
+
+    s.place(elec_shelf_1, rotation='', rel_to_item=[(block1,"R"),(block2,"B")])
+    s.place(elec_shelf_2, rotation='', rel_to_item=[(elec_shelf_1,"R"),(elec_shelf_1,"AF")], offset=[10,0,0])
+    s.place(elec_table, rotation="L", rel_to_item=[(elec_shelf_1,"B"),(elec_shelf_2,"AL")], offset=[0,0,0])
+
+    d = drawer1Ts
+    d2t = drawer2T
+    s.place(d2t, rel_to_item=[(charger,"B"), (charger,"AL")], offset=[0,0.5,0], rotation="L")
+    s.place(d[0], rel_to_item=[(nightstand,"F"), (nightstand,"AR")], offset=[0,0,0], rotation="L")
+    s.place(d[1], rel_to_item=[(d[0],"F"), (d[0],"AR")], offset=(0,0.5,0), rotation="L")
+    s.place(d[2], rel_to_item=[(d[1],"F"), (d[1],"AR")], offset=(0,0.5,0), rotation="L")
+    s.place(d[3], rel_to_item=[(d[2],"F"), (d[2],"AR")], offset=(0,0.5,0), rotation="L")
+    s.place(d[4], rel_to_item=[(desk,"R"), (desk,"AB")], offset=(0,0,0), rotation="")
+
+    return None
+
 
 def render():
   b0 = BedRoom0()
   b1 = BedRoom1()
-  return union()(b0.render_all(), right(20*12)(b1.render_all()))
+  b2 = BedRoom2()
+  return union()(b0.render_all(), right(20*12)(b1.render_all()), right(40*12)(b2.render_all()))
 
